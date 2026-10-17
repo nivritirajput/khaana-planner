@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Khaana Planner</title>
+<meta name="description" content="A month-by-month Indian vegetarian meal planner: healthy weekdays, school tiffins with nutrients, and Sunday treat days.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #fff8ef;
+    --card: #ffffff;
+    --ink: #3b2416;
+    --muted: #8a6d5a;
+    --line: #f1dfcc;
+    --saffron: #f28c28;
+    --saffron-d: #c9620a;
+    --green: #2f9e5b;
+    --green-l: #e5f6eb;
+    --treat: #e2456b;
+    --treat-l: #ffe8ee;
+    --tiffin: #3a7bd5;
+    --tiffin-l: #e7f0fd;
+    --gold: #f6c343;
+    --shadow: 0 8px 24px rgba(160, 90, 30, .12);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Nunito', system-ui, sans-serif;
+    color: var(--ink);
+    background:
+      radial-gradient(circle at 10% 0%, #ffe6c7 0, transparent 40%),
+      radial-gradient(circle at 100% 30%, #e6f7ea 0, transparent 35%),
+      var(--bg);
+    min-height: 100vh;
+  }
+  h1, h2, h3, .brand, button, select { font-family: 'Baloo 2', system-ui, sans-serif; }
+  .wrap { max-width: 1240px; margin: 0 auto; padding: 0 16px 48px; }
+
+  /* ---------- header ---------- */
+  header {
+    display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;
+    padding: 22px 0 14px;
+  }
+  .brand { display: flex; align-items: center; gap: 12px; }
+  .logo {
+    width: 54px; height: 54px; border-radius: 16px;
+    background: linear-gradient(135deg, var(--saffron), #ffb347);
+    display: grid; place-items: center; font-size: 30px;
+    box-shadow: 0 6px 16px rgba(242,140,40,.4);
+    animation: steam 3s ease-in-out infinite;
+  }
+  @keyframes steam { 0%,100% { transform: rotate(-4deg); } 50% { transform: rotate(4deg) translateY(-3px); } }
+  .brand h1 { font-size: 2rem; line-height: 1; color: var(--saffron-d); }
+  .brand small { display: block; color: var(--muted); font-family: 'Nunito'; font-weight: 600; font-size: .9rem; margin-top: 4px; }
+
+  .controls { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  .btn {
+    border: none; cursor: pointer; font-weight: 700; font-size: 1rem;
+    padding: 8px 16px; border-radius: 12px;
+    background: var(--card); color: var(--ink);
+    box-shadow: 0 2px 0 var(--line), 0 4px 10px rgba(0,0,0,.05);
+    border: 2px solid var(--line);
+    transition: transform .15s, background .15s;
+  }
+  .btn:hover { transform: translateY(-2px); }
+  .btn.primary { background: var(--saffron); color: #fff; border-color: var(--saffron-d); box-shadow: 0 3px 0 var(--saffron-d); }
+  .btn.icon { padding: 8px 12px; }
+  select {
+    font-size: 1rem; font-weight: 700; padding: 8px 10px; border-radius: 12px;
+    border: 2px solid var(--line); background: var(--card); color: var(--ink); cursor: pointer;
+  }
+
+  /* ---------- legend + summary ---------- */
+  .strip {
+    display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between;
+    background: var(--card); border-radius: 18px; padding: 12px 16px; box-shadow: var(--shadow);
+    margin-bottom: 16px;
+  }
+  .legend { display: flex; flex-wrap: wrap; gap: 14px; font-weight: 700; font-size: .92rem; }
+  .legend span { display: inline-flex; align-items: center; gap: 6px; }
+  .dot { width: 14px; height: 14px; border-radius: 4px; display: inline-block; }
+  .summary { display: flex; flex-wrap: wrap; gap: 8px; font-size: .9rem; }
+  .pill { background: var(--bg); border: 1px solid var(--line); border-radius: 999px; padding: 4px 12px; font-weight: 700; }
+
+  /* ---------- layout ---------- */
+  .layout { display: grid; grid-template-columns: 1fr 380px; gap: 18px; align-items: start; }
+
+  /* ---------- calendar ---------- */
+  .cal { background: var(--card); border-radius: 22px; padding: 14px; box-shadow: var(--shadow); }
+  .cal-title { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+  .cal-title h2 { font-size: 1.6rem; color: var(--saffron-d); }
+  .weekdays, .grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
+  .weekdays div { text-align: center; font-weight: 800; font-family: 'Baloo 2'; color: var(--muted); font-size: .95rem; padding: 4px 0; }
+  .weekdays div:first-child { color: var(--treat); }
+  .day {
+    min-height: 118px; border-radius: 14px; padding: 6px 7px;
+    background: #fffdf9; border: 2px solid var(--line);
+    cursor: pointer; display: flex; flex-direction: column; gap: 3px;
+    transition: transform .15s, border-color .15s, box-shadow .15s;
+    animation: fadeUp .4s ease both;
+    text-align: left; font: inherit; color: inherit;
+  }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+  .day:hover { transform: translateY(-2px); border-color: var(--saffron); }
+  .day.selected { border-color: var(--saffron); box-shadow: 0 0 0 3px rgba(242,140,40,.25); }
+  .day.today .num { background: var(--saffron); color: #fff; }
+  .day.sunday { background: var(--treat-l); border-color: #ffc6d3; }
+  .day.sunday:hover, .day.sunday.selected { border-color: var(--treat); }
+  .day.empty { background: transparent; border: none; cursor: default; animation: none; }
+  .day-head { display: flex; justify-content: space-between; align-items: center; }
+  .wdname { display: none; font-weight: 800; color: var(--muted); margin-left: 6px; }
+  .day-head > span:first-child { display: inline-flex; align-items: center; }
+  .num { font-family: 'Baloo 2'; font-weight: 800; font-size: 1rem; width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; }
+  .tag { font-size: .68rem; font-weight: 800; padding: 1px 7px; border-radius: 999px; }
+  .tag.h { background: var(--green-l); color: var(--green); }
+  .tag.t { background: #fff; color: var(--treat); }
+  .meal-line { font-size: .74rem; line-height: 1.25; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .meal-line.tf { color: var(--tiffin); font-weight: 700; }
+  .meal-line .edited { color: var(--saffron-d); }
+  .kcal { margin-top: auto; font-size: .7rem; font-weight: 800; color: var(--muted); }
+
+  /* ---------- day panel ---------- */
+  .panel { background: var(--card); border-radius: 22px; padding: 18px; box-shadow: var(--shadow); position: sticky; top: 14px; }
+  .panel h2 { font-size: 1.45rem; line-height: 1.15; }
+  .panel .sub { color: var(--muted); font-weight: 700; margin: 2px 0 12px; }
+  .banner { border-radius: 14px; padding: 10px 12px; font-weight: 700; font-size: .92rem; margin-bottom: 12px; }
+  .banner.h { background: var(--green-l); color: #1f6e3f; }
+  .banner.t { background: var(--treat-l); color: #a52448; }
+  .meal { border: 2px solid var(--line); border-radius: 16px; padding: 12px; margin-bottom: 10px; animation: fadeUp .35s ease both; }
+  .meal.tiffin { border-color: #c4d9f7; background: var(--tiffin-l); }
+  .meal.treat { border-color: #ffc6d3; background: #fff6f8; }
+  .meal-top { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 6px; }
+  .slot { font-family: 'Baloo 2'; font-weight: 800; font-size: .95rem; color: var(--muted); }
+  .meal.tiffin .slot { color: var(--tiffin); }
+  .meal.treat .slot { color: var(--treat); }
+  .dish { display: flex; align-items: center; gap: 10px; }
+  .dish .emo { font-size: 2rem; }
+  .dish .name { font-family: 'Baloo 2'; font-weight: 700; font-size: 1.12rem; line-height: 1.2; }
+  .dish .boost { font-size: .8rem; color: var(--green); font-weight: 700; }
+  .meal.treat .dish .boost { color: var(--treat); }
+  .nutri { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 8px; }
+  .nutri span { font-size: .74rem; font-weight: 800; padding: 2px 8px; border-radius: 999px; background: #fff; border: 1px solid var(--line); }
+  .meal select { width: 100%; margin-top: 8px; font-size: .9rem; padding: 6px 8px; }
+
+  .totals { border-radius: 16px; background: var(--bg); padding: 12px; margin-top: 4px; }
+  .totals h3 { font-size: 1.05rem; margin-bottom: 6px; }
+  .bar-row { display: grid; grid-template-columns: 74px 1fr 82px; align-items: center; gap: 8px; font-size: .82rem; font-weight: 700; margin: 5px 0; }
+  .bar { height: 10px; background: #fff; border-radius: 999px; overflow: hidden; border: 1px solid var(--line); }
+  .bar i { display: block; height: 100%; border-radius: 999px; background: var(--green); width: 0; transition: width .8s cubic-bezier(.3,1.2,.5,1); }
+  .bar i.over { background: var(--treat); }
+  .note { font-size: .74rem; color: var(--muted); margin-top: 8px; }
+
+  .toast {
+    position: fixed; bottom: 20px; left: 50%; transform: translate(-50%, 120px);
+    background: var(--ink); color: #fff; font-weight: 700; padding: 10px 18px; border-radius: 12px;
+    transition: transform .3s; z-index: 20;
+  }
+  .toast.show { transform: translate(-50%, 0); }
+
+  footer { text-align: center; color: var(--muted); font-size: .85rem; margin-top: 28px; }
+  .madeby { font-family: 'Baloo 2'; font-size: 1.15rem; color: var(--saffron-d); margin-bottom: 4px; }
+
+  /* ---------- responsive ---------- */
+  @media (max-width: 980px) {
+    .layout { grid-template-columns: 1fr; }
+    .panel { position: static; }
+  }
+  @media (max-width: 680px) {
+    .weekdays { display: none; }
+    .grid { grid-template-columns: 1fr; }
+    .day.empty { display: none; }
+    .day { min-height: 0; }
+    .wdname { display: inline; }
+    .meal-line { font-size: .84rem; white-space: normal; }
+    .brand h1 { font-size: 1.6rem; }
+  }
+
+  /* ---------- print: the month on one page ---------- */
+  @media print {
+    body { background: #fff; }
+    .controls, .panel, .strip .summary, .toast { display: none !important; }
+    .layout { grid-template-columns: 1fr; }
+    .cal { box-shadow: none; padding: 0; }
+    .day { min-height: 92px; break-inside: avoid; animation: none; }
+    .meal-line { white-space: normal; font-size: .64rem; }
+  }
+  @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand">
+      <div class="logo">🍛</div>
+      <div>
+        <h1>Khaana Planner</h1>
+        <small>Indian veg meals for every day of the year · Made by <b>Nivriti Rajput</b> 👩‍🍳</small>
+      </div>
+    </div>
+    <div class="controls">
+      <button class="btn icon" id="prev" aria-label="Previous month">◀</button>
+      <select id="monthSel" aria-label="Month"></select>
+      <select id="yearSel" aria-label="Year"></select>
+      <button class="btn icon" id="next" aria-label="Next month">▶</button>
+      <button class="btn" id="todayBtn">Today</button>
+      <button class="btn primary" id="shuffle">🔀 New plan</button>
+      <button class="btn" id="reset" title="Undo your own changes for this month">↺ Reset edits</button>
+      <button class="btn" id="print">🖨️ Print</button>
+    </div>
+  </header>
+
+  <div class="strip">
+    <div class="legend">
+      <span><i class="dot" style="background:var(--green)"></i>Healthy day</span>
+      <span><i class="dot" style="background:var(--treat)"></i>Sunday treat day</span>
+      <span><i class="dot" style="background:var(--tiffin)"></i>🎒 School tiffin (Mon–Fri)</span>
+    </div>
+    <div class="summary" id="summary"></div>
+  </div>
+
+  <div class="layout">
+    <section class="cal">
+      <div class="cal-title"><h2 id="calTitle"></h2></div>
+      <div class="weekdays"><div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div></div>
+      <div class="grid" id="grid"></div>
+    </section>
+    <aside class="panel" id="panel" aria-live="polite"></aside>
+  </div>
+
+  <footer><p class="madeby">Made with 💛 by <b>Nivriti Rajput</b></p>Nutrient values are rough estimates per child-sized serving, meant as a guide, not medical advice. Your changes are saved in this browser only.</footer>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* =========================================================
+   Dish library: [name, emoji, kcal, protein g, carbs g, fat g, fibre g, key nutrient]
+   Values are approximate for one child-sized serving.
+   ========================================================= */
+const D = {
+  breakfast: [
+    ['Vegetable Poha', '🍚', 250, 6, 42, 7, 3, 'Iron'],
+    ['Moong Dal Chilla', '🥞', 230, 13, 28, 7, 5, 'Protein'],
+    ['Vegetable Upma', '🥣', 220, 6, 35, 7, 4, 'Fibre'],
+    ['Idli Sambar', '⚪', 260, 10, 48, 3, 5, 'Protein'],
+    ['Ragi Dosa & Chutney', '🫓', 240, 7, 40, 6, 5, 'Calcium'],
+    ['Oats Veg Uttapam', '🥞', 250, 9, 38, 7, 6, 'Fibre'],
+    ['Besan Chilla with Paneer', '🧀', 280, 15, 24, 13, 5, 'Protein'],
+    ['Daliya with Milk & Nuts', '🥣', 260, 10, 40, 7, 6, 'Fibre'],
+    ['Paneer Paratha & Curd', '🫓', 340, 15, 38, 14, 5, 'Calcium'],
+    ['Sprouts Chaat & Milk', '🌱', 260, 15, 32, 7, 7, 'Protein'],
+    ['Vegetable Sevai', '🍝', 230, 6, 40, 5, 3, 'Vitamin A'],
+    ['Methi Thepla & Curd', '🫓', 300, 10, 40, 11, 5, 'Iron'],
+    ['Pesarattu (Green Moong Dosa)', '🥞', 230, 12, 30, 6, 5, 'Protein'],
+    ['Rava Idli & Coconut Chutney', '⚪', 230, 7, 38, 5, 3, 'Energy'],
+    ['Banana Ragi Porridge', '🍌', 230, 7, 42, 4, 5, 'Calcium'],
+    ['Palak Paratha & Curd', '🥬', 300, 10, 40, 11, 6, 'Iron']
+  ],
+  tiffin: [
+    ['Paneer Kathi Roll', '🌯', 330, 15, 36, 14, 5, 'Protein'],
+    ['Veg Pulao & Raita', '🍚', 320, 8, 50, 9, 4, 'Vitamin A'],
+    ['Mini Idli & Chutney', '⚪', 250, 8, 44, 4, 4, 'Protein'],
+    ['Aloo-Matar Paratha (light oil)', '🫓', 310, 8, 44, 11, 6, 'Fibre'],
+    ['Brown Bread Veg Sandwich', '🥪', 260, 9, 38, 8, 6, 'Fibre'],
+    ['Lemon Rice with Peanuts', '🍋', 300, 7, 48, 9, 3, 'Vitamin C'],
+    ['Corn & Paneer Wrap', '🌽', 310, 14, 36, 12, 5, 'Protein'],
+    ['Veg Uttapam Bites', '🥞', 260, 8, 40, 7, 5, 'Vitamin A'],
+    ['Curd Rice & Pomegranate', '🍚', 270, 8, 44, 6, 2, 'Calcium'],
+    ['Palak Paratha Rolls', '🥬', 300, 10, 40, 11, 6, 'Iron'],
+    ['Besan Chilla Roll', '🌯', 270, 13, 26, 12, 5, 'Protein'],
+    ['Atta Veg Noodles', '🍜', 300, 8, 46, 9, 5, 'Fibre'],
+    ['Paneer Bhurji Roti Roll', '🧀', 320, 16, 30, 15, 4, 'Calcium'],
+    ['Sprouts Tikki & Mint Dip', '🌱', 260, 12, 32, 9, 7, 'Protein'],
+    ['Veg Dalia Khichdi', '🥣', 240, 8, 40, 5, 7, 'Fibre'],
+    ['Moong Dal Dhokla', '🟨', 240, 12, 34, 5, 5, 'Protein']
+  ],
+  homeLunch: [
+    ['Rajma Chawal & Salad', '🫘', 430, 16, 70, 8, 12, 'Protein'],
+    ['Dal, Roti & Bhindi', '🍛', 420, 16, 60, 12, 11, 'Fibre'],
+    ['Kadhi Chawal & Salad', '🍛', 400, 12, 62, 11, 4, 'Calcium'],
+    ['Chole, Roti & Kachumber', '🫘', 440, 17, 62, 12, 13, 'Iron'],
+    ['Sambar Rice & Beans Poriyal', '🍲', 400, 13, 66, 8, 10, 'Fibre'],
+    ['Lobia Curry & Jeera Rice', '🫘', 410, 16, 66, 8, 12, 'Folate']
+  ],
+  dinner: [
+    ['Dal Tadka, Roti & Lauki', '🍛', 400, 16, 60, 10, 10, 'Protein'],
+    ['Palak Paneer & Roti', '🥬', 430, 20, 40, 20, 8, 'Iron'],
+    ['Moong Dal Khichdi & Curd', '🍚', 380, 15, 62, 8, 7, 'Protein'],
+    ['Rajma & Brown Rice', '🫘', 430, 17, 70, 7, 13, 'Fibre'],
+    ['Mix Veg, Dal & Roti', '🥕', 410, 15, 60, 11, 11, 'Vitamin A'],
+    ['Matar Paneer & Roti', '🧀', 440, 19, 44, 20, 8, 'Calcium'],
+    ['Sambar, Rice & Cabbage Poriyal', '🍲', 400, 13, 66, 8, 10, 'Fibre'],
+    ['Aloo Gobhi, Dal & Roti', '🥦', 410, 14, 62, 11, 10, 'Vitamin C'],
+    ['Masoor Dal, Jeera Rice & Salad', '🍛', 400, 17, 64, 7, 9, 'Iron'],
+    ['Baingan Bharta, Dal & Roti', '🍆', 400, 15, 58, 11, 11, 'Fibre'],
+    ['Soya Chunk Curry & Roti', '🥘', 420, 26, 50, 11, 10, 'Protein'],
+    ['Paneer Tikka, Dal & Roti', '🍢', 450, 24, 44, 18, 8, 'Protein'],
+    ['Tori Sabzi, Moong Dal & Roti', '🥒', 380, 15, 58, 9, 10, 'Vitamin C'],
+    ['Methi Dal, Rice & Salad', '🌿', 390, 16, 62, 8, 10, 'Iron'],
+    ['Chana Dal, Roti & Pumpkin Sabzi', '🎃', 410, 17, 60, 10, 12, 'Vitamin A'],
+    ['Veg Dalia Khichdi & Raita', '🥣', 360, 13, 60, 7, 9, 'Fibre']
+  ],
+  sunBreakfast: [
+    ['Aloo Puri', '🥔', 520, 10, 60, 26, 5, 'Treat!'],
+    ['Butter Aloo Paratha', '🧈', 480, 10, 56, 24, 5, 'Treat!'],
+    ['Kachori Sabzi', '🥟', 540, 11, 58, 29, 6, 'Treat!'],
+    ['Bread Pakora & Chai', '🍞', 470, 11, 52, 24, 4, 'Treat!'],
+    ['Butter Masala Dosa', '🌮', 450, 9, 62, 18, 5, 'Treat!'],
+    ['Sabudana Vada & Chutney', '🟤', 460, 6, 58, 22, 3, 'Treat!']
+  ],
+  sunLunch: [
+    ['Chole Bhature', '🫓', 650, 17, 78, 30, 12, 'Treat!'],
+    ['Pav Bhaji', '🍞', 580, 13, 76, 25, 9, 'Treat!'],
+    ['Dal Makhani & Butter Naan', '🧈', 640, 18, 70, 32, 11, 'Treat!'],
+    ['Veg Biryani & Raita', '🍚', 560, 13, 80, 20, 7, 'Treat!'],
+    ['Paneer Butter Masala & Naan', '🧀', 660, 21, 64, 35, 6, 'Treat!'],
+    ['Raj Kachori Chaat', '🥗', 540, 14, 68, 24, 9, 'Treat!']
+  ],
+  sunDinner: [
+    ['Paneer Tikka Pizza', '🍕', 600, 22, 66, 26, 5, 'Treat!'],
+    ['Veg Manchurian & Fried Rice', '🥡', 590, 12, 80, 24, 6, 'Treat!'],
+    ['Malai Kofta & Laccha Paratha', '🍲', 650, 15, 66, 36, 6, 'Treat!'],
+    ['Aloo Tikki & Dahi Bhalla Chaat', '🥔', 520, 13, 68, 21, 7, 'Treat!'],
+    ['Shahi Paneer & Butter Naan', '🧀', 660, 21, 62, 36, 5, 'Treat!'],
+    ['Samosa & Pani Puri Party', '🥟', 560, 11, 70, 26, 7, 'Treat!']
+  ],
+  sweet: [
+    ['Gulab Jamun', '🟤', 180, 3, 28, 7, 0, 'Dessert'],
+    ['Rasmalai', '🍮', 190, 6, 24, 8, 0, 'Dessert'],
+    ['Kesar Kheer', '🍚', 200, 6, 30, 7, 0, 'Dessert'],
+    ['Jalebi & Rabri', '🌀', 240, 4, 36, 10, 0, 'Dessert'],
+    ['Malai Kulfi', '🍡', 180, 5, 20, 9, 0, 'Dessert'],
+    ['Gajar Halwa', '🥕', 220, 4, 30, 10, 2, 'Dessert']
+  ]
+};
+
+/* Rough daily guide for a 7–10 year old child */
+const TARGET = { kcal: 1700, p: 34, c: 230, f: 50, fb: 25 };
+const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+const WD = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+
+/* ---------- safe storage ---------- */
+const store = {
+  get(k, d) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch { return d; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} }
+};
+let edits = store.get('kp-edits', {});   // { 'YYYY-MM-DD': { breakfast: idx, lunch: idx, ... } }
+let seeds = store.get('kp-seeds', {});   // { 'YYYY-MM': number }
+
+/* ---------- seeded random ---------- */
+function rng(seed) {
+  return function () {
+    seed |= 0; seed = seed + 0x6D2B79F5 | 0;
+    let t = Math.imul(seed ^ seed >>> 15, 1 | seed);
+    t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+    return ((t ^ t >>> 14) >>> 0) / 4294967296;
+  };
+}
+function shuffled(n, r) {
+  const a = [...Array(n).keys()];
+  for (let i = n - 1; i > 0; i--) { const j = Math.floor(r() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; }
+  return a;
+}
+/* Cycles through a list in a shuffled order so dishes don't repeat until all have been used */
+function cycler(list, r) {
+  let order = shuffled(list.length, r), i = 0, last = -1;
+  return () => {
+    if (i >= order.length) {
+      order = shuffled(list.length, r); i = 0;
+      if (order[0] === last && order.length > 1) [order[0], order[1]] = [order[1], order[0]];
+    }
+    return (last = order[i++]);
+  };
+}
+
+const pad = n => String(n).padStart(2, '0');
+const keyOf = (y, m, d) => `${y}-${pad(m + 1)}-${pad(d)}`;
+
+/* Which dish list fills each slot on a given weekday */
+function slotsFor(wd) {
+  if (wd === 0) return [
+    ['breakfast', 'Breakfast', 'sunBreakfast'],
+    ['lunch', 'Lunch', 'sunLunch'],
+    ['dinner', 'Dinner', 'sunDinner'],
+    ['sweet', 'Sweet treat', 'sweet']
+  ];
+  return [
+    ['breakfast', 'Breakfast', 'breakfast'],
+    wd === 6 ? ['lunch', 'Lunch at home', 'homeLunch'] : ['lunch', '🎒 School tiffin', 'tiffin'],
+    ['dinner', 'Dinner', 'dinner']
+  ];
+}
+
+/* Build the whole month's plan (deterministic per month + seed), then apply user edits */
+function buildMonth(y, m) {
+  const r = rng((y * 100 + m + 1) * 7919 + (seeds[`${y}-${pad(m + 1)}`] || 0));
+  const cyc = {};
+  Object.keys(D).forEach(k => cyc[k] = cycler(D[k], r));
+  const days = new Date(y, m + 1, 0).getDate();
+  const plan = [];
+  for (let d = 1; d <= days; d++) {
+    const wd = new Date(y, m, d).getDay();
+    const key = keyOf(y, m, d);
+    const meals = slotsFor(wd).map(([slot, label, list]) => {
+      const auto = cyc[list]();
+      const ed = edits[key] && edits[key][slot];
+      const idx = ed != null && D[list][ed] ? ed : auto;
+      return { slot, label, list, idx, edited: ed != null && ed !== auto, dish: D[list][idx] };
+    });
+    plan.push({ d, wd, key, meals, sunday: wd === 0 });
+  }
+  return plan;
+}
+
+const sum = meals => meals.reduce((t, m) => {
+  const x = m.dish; t.kcal += x[2]; t.p += x[3]; t.c += x[4]; t.f += x[5]; t.fb += x[6]; return t;
+}, { kcal: 0, p: 0, c: 0, f: 0, fb: 0 });
+
+/* ---------- state + rendering ---------- */
+const now = new Date();
+let Y = now.getFullYear(), M = now.getMonth(), sel = now.getDate();
+let plan = [];
+
+const $ = id => document.getElementById(id);
+function setupSelects() {
+  $('monthSel').innerHTML = MONTHS.map((n, i) => `<option value="${i}">${n}</option>`).join('');
+  const ys = []; for (let y = now.getFullYear() - 1; y <= now.getFullYear() + 3; y++) ys.push(y);
+  $('yearSel').innerHTML = ys.map(y => `<option>${y}</option>`).join('');
+}
+
+function render() {
+  $('monthSel').value = M; $('yearSel').value = Y;
+  $('calTitle').textContent = `${MONTHS[M]} ${Y}`;
+  plan = buildMonth(Y, M);
+  if (sel > plan.length) sel = plan.length;
+
+  const first = new Date(Y, M, 1).getDay();
+  const isNowMonth = Y === now.getFullYear() && M === now.getMonth();
+  let html = '';
+  for (let i = 0; i < first; i++) html += '<div class="day empty"></div>';
+  plan.forEach((p, i) => {
+    const t = sum(p.meals);
+    const lines = p.meals.filter(m => m.slot !== 'sweet').map(m =>
+      `<div class="meal-line ${m.list === 'tiffin' ? 'tf' : ''}">${m.dish[1]} ${m.edited ? '<span class="edited">✎</span> ' : ''}${m.dish[0]}</div>`).join('');
+    html += `<button class="day ${p.sunday ? 'sunday' : ''} ${p.d === sel ? 'selected' : ''} ${isNowMonth && p.d === now.getDate() ? 'today' : ''}"
+      data-d="${p.d}" style="animation-delay:${i * 12}ms" aria-label="${WD[p.wd]} ${p.d} ${MONTHS[M]}">
+      <div class="day-head"><span><span class="num">${p.d}</span><span class="wdname">${WD[p.wd]}</span></span>
+        <span class="tag ${p.sunday ? 't' : 'h'}">${p.sunday ? '🎉 Treat' : '✅ Healthy'}</span></div>
+      ${lines}
+      <div class="kcal">≈ ${t.kcal} kcal · ${t.p}g protein</div>
+    </button>`;
+  });
+  $('grid').innerHTML = html;
+  $('grid').querySelectorAll('.day[data-d]').forEach(b => b.onclick = () => { sel = +b.dataset.d; render(); });
+
+  renderSummary();
+  renderPanel();
+}
+
+function renderSummary() {
+  const healthy = plan.filter(p => !p.sunday);
+  const avg = k => Math.round(healthy.reduce((s, p) => s + sum(p.meals)[k], 0) / healthy.length);
+  const tiffins = plan.filter(p => p.wd >= 1 && p.wd <= 5).length;
+  $('summary').innerHTML = `
+    <span class="pill">✅ ${healthy.length} healthy days</span>
+    <span class="pill">🎉 ${plan.length - healthy.length} Sundays</span>
+    <span class="pill">🎒 ${tiffins} tiffins</span>
+    <span class="pill">Avg healthy day ≈ ${avg('kcal')} kcal · ${avg('p')}g protein</span>`;
+}
+
+function renderPanel() {
+  const p = plan[sel - 1];
+  const t = sum(p.meals);
+  const meals = p.meals.map(m => {
+    const x = m.dish;
+    const opts = D[m.list].map((o, i) => `<option value="${i}" ${i === m.idx ? 'selected' : ''}>${o[1]} ${o[0]}</option>`).join('');
+    const cls = m.list === 'tiffin' ? 'tiffin' : (p.sunday ? 'treat' : '');
+    return `<div class="meal ${cls}">
+      <div class="meal-top"><span class="slot">${m.label}</span>${m.edited ? '<span class="tag h">✎ your pick</span>' : ''}</div>
+      <div class="dish"><span class="emo">${x[1]}</span>
+        <div><div class="name">${x[0]}</div><div class="boost">${p.sunday ? '😋 ' + x[7] : '💪 Rich in ' + x[7]}</div></div></div>
+      <div class="nutri">
+        <span>🔥 ${x[2]} kcal</span><span>🥜 ${x[3]}g protein</span><span>🌾 ${x[4]}g carbs</span><span>🧈 ${x[5]}g fat</span><span>🥦 ${x[6]}g fibre</span>
+      </div>
+      <select data-slot="${m.slot}" data-list="${m.list}" aria-label="Change ${m.label}">${opts}</select>
+    </div>`;
+  }).join('');
+
+  const bar = (label, val, tgt, unit) => {
+    const pct = Math.min(100, Math.round(val / tgt * 100));
+    return `<div class="bar-row"><span>${label}</span><div class="bar"><i class="${val > tgt * 1.1 ? 'over' : ''}" data-w="${pct}"></i></div><span>${val}${unit} / ${tgt}${unit}</span></div>`;
+  };
+
+  $('panel').innerHTML = `
+    <h2>${WD[p.wd]}, ${p.d} ${MONTHS[M]}</h2>
+    <div class="sub">${p.sunday ? 'Sunday Funday 🎉' : (p.wd === 6 ? 'Saturday — lunch at home' : 'School day 🎒')}</div>
+    <div class="banner ${p.sunday ? 't' : 'h'}">${p.sunday
+      ? '🎉 Treat day! Enjoy the yummy stuff — keep portions small and drink plenty of water.'
+      : '✅ Healthy day: dal / paneer / sprouts for protein, veggies for vitamins and fibre.'}</div>
+    ${meals}
+    <div class="totals">
+      <h3>Day total (3 meals${p.sunday ? ' + sweet' : ''})</h3>
+      ${bar('Energy', t.kcal, TARGET.kcal, '')}
+      ${bar('Protein', t.p, TARGET.p, 'g')}
+      ${bar('Carbs', t.c, TARGET.c, 'g')}
+      ${bar('Fat', t.f, TARGET.f, 'g')}
+      ${bar('Fibre', t.fb, TARGET.fb, 'g')}
+      <div class="note">Goal shown is a rough daily guide for a 7–10 year old. Add milk, fruit and a snack to reach it.</div>
+    </div>`;
+
+  requestAnimationFrame(() => $('panel').querySelectorAll('.bar i').forEach(i => i.style.width = i.dataset.w + '%'));
+  $('panel').querySelectorAll('select').forEach(s => s.onchange = () => {
+    const k = p.key;
+    edits[k] = edits[k] || {};
+    edits[k][s.dataset.slot] = +s.value;
+    store.set('kp-edits', edits);
+    toast('Saved ✔');
+    render();
+  });
+}
+
+let toastTimer;
+function toast(msg) {
+  const t = $('toast'); t.textContent = msg; t.classList.add('show');
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove('show'), 1600);
+}
+
+function go(dm) {
+  M += dm;
+  if (M < 0) { M = 11; Y--; } if (M > 11) { M = 0; Y++; }
+  sel = 1; render();
+}
+
+/* ---------- controls ---------- */
+setupSelects();
+$('prev').onclick = () => go(-1);
+$('next').onclick = () => go(1);
+$('monthSel').onchange = e => { M = +e.target.value; sel = 1; render(); };
+$('yearSel').onchange = e => { Y = +e.target.value; sel = 1; render(); };
+$('todayBtn').onclick = () => { Y = now.getFullYear(); M = now.getMonth(); sel = now.getDate(); render(); };
+$('shuffle').onclick = () => {
+  const k = `${Y}-${pad(M + 1)}`;
+  seeds[k] = Math.floor(Math.random() * 1e6);
+  store.set('kp-seeds', seeds);
+  toast(`New plan for ${MONTHS[M]} 🔀`);
+  render();
+};
+$('reset').onclick = () => {
+  const prefix = `${Y}-${pad(M + 1)}-`;
+  Object.keys(edits).forEach(k => { if (k.startsWith(prefix)) delete edits[k]; });
+  store.set('kp-edits', edits);
+  toast('Your edits for this month were cleared');
+  render();
+};
+$('print').onclick = () => window.print();
+document.addEventListener('keydown', e => {
+  if (e.target.tagName === 'SELECT') return;
+  if (e.key === 'ArrowLeft') go(-1);
+  if (e.key === 'ArrowRight') go(1);
+});
+
+render();
+</script>
+</body>
+</html>
