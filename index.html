@@ -267,6 +267,49 @@
     .season .big { font-size: 2.4rem; }
   }
 
+  /* ---------- phone: simple Day view + options drawer ---------- */
+  .mobile-only, .mtools, .dayview { display: none; }
+  @media (max-width: 700px) {
+    header { padding: 14px 0 10px; }
+    .brand small { display: none; }
+    .logo { width: 44px; height: 44px; font-size: 24px; }
+    .mtools { display: flex; gap: 8px; align-items: center; width: 100%; justify-content: space-between; }
+    .mobile-only { display: flex; }
+    #shuffle, #reset, #print, #todayBtn { display: none; }
+    .options { display: none; }
+    .options.open { display: flex; animation: fadeUp .25s ease both; }
+    .options .opt { width: 100%; }
+    .legend { display: none; }
+    .season-body { display: none; }
+    .season { grid-template-columns: auto 1fr; }
+    .season .big { grid-row: auto; }
+    body.dayv .controls, body.dayv #season, body.dayv .strip, body.dayv .layout { display: none; }
+    body.dayv .dayview { display: block; }
+  }
+  .dv-nav { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 10px 12px; margin-bottom: 10px; }
+  .dv-nav .btn { font-size: 1.2rem; padding: 6px 14px; }
+  .dv-date { text-align: center; line-height: 1.15; }
+  .dv-date b { font-family: 'Baloo 2'; font-size: 1.35rem; color: var(--accent-d); display: block; }
+  .dv-date span { font-size: .85rem; font-weight: 700; color: var(--muted); }
+  .dv-season { font-size: .85rem; font-weight: 700; color: var(--muted); padding: 0 4px 10px; }
+  .dv-card { padding: 14px; margin-bottom: 10px; }
+  .dv-card h3 { font-size: 1.1rem; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+  .dv-meal { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px dashed var(--line); }
+  .dv-meal:last-child { border-bottom: none; }
+  .dv-meal .emo { font-size: 1.8rem; width: 38px; text-align: center; flex: none; }
+  .dv-meal .info { flex: 1; min-width: 0; }
+  .dv-meal small { display: block; font-size: .75rem; font-weight: 800; color: var(--muted); }
+  .dv-meal.tf small:first-child { color: var(--tiffin); }
+  .dv-meal b { font-family: 'Baloo 2'; font-size: 1.05rem; line-height: 1.2; display: block; }
+  .dv-full { width: 100%; margin-top: 10px; padding: 10px; font-size: 1.05rem; }
+  .dv-mini { font-size: .9rem; line-height: 1.5; }
+  .dv-mini .ok { color: var(--green); font-weight: 800; }
+  .dv-mini .lo { color: var(--red); font-weight: 800; }
+  .dv-list { font-size: .9rem; margin-bottom: 6px; }
+  .dv-sugg { background: var(--good-bg); border: 2px dashed var(--green); border-radius: 14px; padding: 10px 12px; margin-top: 8px; font-size: .92rem; }
+  .dv-sugg .btn { margin-top: 8px; }
+  details.dv-more summary { cursor: pointer; font-weight: 800; color: var(--accent-d); margin-top: 8px; }
+
   @media print {
     body { background: #fff; color: #000; }
     .controls, .options, .season, .panel, .report, .strip .summary, .toast { display: none !important; }
@@ -299,9 +342,20 @@
       <button class="btn" id="reset"></button>
       <button class="btn" id="print"></button>
     </div>
+    <div class="mtools">
+      <div class="seg" id="viewSeg"><button data-v="day" data-t="dayView"></button><button data-v="month" data-t="monthView"></button></div>
+      <button class="btn" id="optBtn" data-t="optionsBtn"></button>
+    </div>
   </header>
 
-  <section class="card options" aria-label="Options">
+  <section class="card options" id="options" aria-label="Options">
+    <div class="opt mobile-only"><span class="lbl" data-t="planLbl"></span>
+      <div class="checks">
+        <button class="btn sm" id="mToday" data-t="today"></button>
+        <button class="btn sm" id="mShuffle" data-t="newPlan"></button>
+        <button class="btn sm" id="mReset" data-t="reset"></button>
+        <button class="btn sm" id="mPrint" data-t="print"></button>
+      </div></div>
     <div class="opt"><span class="lbl" data-t="language"></span>
       <div class="seg" id="langSeg"><button data-v="en">English</button><button data-v="hi">हिंदी</button></div></div>
     <div class="opt"><span class="lbl" data-t="diet"></span>
@@ -312,6 +366,8 @@
     <div class="opt"><label for="colorSel" data-t="colorBy"></label><select id="colorSel"></select></div>
     <div class="opt"><span class="lbl" data-t="extras"></span><div class="checks" id="extras"></div></div>
   </section>
+
+  <section class="dayview" id="dayView" aria-live="polite"></section>
 
   <section class="card season" id="season" aria-label="Season"></section>
 
@@ -380,6 +436,13 @@ const T = {
     veganOn: '🌱 Vegan mode: no milk, curd, paneer or ghee', vegOn: '🥛 Vegetarian mode',
     seasonVeg: '🥬 Vegetables in season', seasonFruit: '🍎 Fruits in season', seasonTip: '💡 Eating tips for this weather',
     seasonNote: 'This month’s plan uses dishes that suit the season.',
+    dayView: '📅 Day', monthView: '🗓️ Month', optionsBtn: '⚙️ Options', planLbl: 'Plan',
+    todayTag: 'Today', yesterday: '⏪ Yesterday', tomorrow: '⏩ Tomorrow', inSeasonShort: 'In season:',
+    markToday: '☐ Mark as cooked', notCooked: 'Not marked as cooked', markIt: 'Mark cooked',
+    metN: '{a} of {b} nutrients on target', good: 'Good:', low: 'Low:', allGood: 'everything on target 🌟',
+    seeAll: 'See all nutrients', lowBoth: 'Yesterday and today were low in {n}.',
+    tryFor: 'Try {d} for tomorrow’s {s} (+{g} {u}).', useIt: '✔ Use it', balanced: '🌟 Good balance! Tomorrow’s plan looks fine.',
+    usedT: 'Tomorrow updated ✔',
     cal: { kcal: 'kcal' }
   },
   hi: {
@@ -418,6 +481,13 @@ const T = {
     veganOn: '🌱 वीगन मोड: दूध, दही, पनीर, घी नहीं', vegOn: '🥛 शाकाहारी मोड',
     seasonVeg: '🥬 मौसमी सब्ज़ियां', seasonFruit: '🍎 मौसमी फल', seasonTip: '💡 इस मौसम में खाने की सलाह',
     seasonNote: 'इस महीने का प्लान मौसम के हिसाब से बना है।',
+    dayView: '📅 दिन', monthView: '🗓️ महीना', optionsBtn: '⚙️ विकल्प', planLbl: 'प्लान',
+    todayTag: 'आज', yesterday: '⏪ कल (बीता हुआ)', tomorrow: '⏩ कल (आने वाला)', inSeasonShort: 'मौसमी:',
+    markToday: '☐ बन गया?', notCooked: 'बना हुआ नहीं चुना', markIt: 'बन गया',
+    metN: '{b} में से {a} पोषक तत्व लक्ष्य पर', good: 'अच्छा:', low: 'कम:', allGood: 'सब लक्ष्य पर 🌟',
+    seeAll: 'सारे पोषक तत्व देखें', lowBoth: 'बीते कल और आज {n} कम रहा।',
+    tryFor: 'आने वाले कल के {s} में {d} आज़माएं (+{g} {u})।', useIt: '✔ यही रखें', balanced: '🌟 अच्छा संतुलन! आने वाले कल का प्लान ठीक है।',
+    usedT: 'आने वाला कल बदल दिया ✔',
     cal: { kcal: 'कैलोरी' }
   }
 };
@@ -685,7 +755,7 @@ const store = {
   set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} }
 };
 const S = Object.assign(
-  { lang: 'en', theme: 'masala', diet: 'veg', treat: 0, school: 'mf', colorBy: 'none',
+  { lang: 'en', theme: 'masala', diet: 'veg', treat: 0, school: 'mf', colorBy: 'none', view: 'day',
     extras: { milk: true, fruit: true, nuts: true, snack: false, curd: false } },
   store.get('kp2-settings', {})
 );
@@ -785,15 +855,31 @@ function buildMonth(y, m) {
       const dish = pick || auto;
       return { slot, label, list, dish, edited: !!pick && pick !== auto };
     });
-    out.push({ d, wd, key, meals, treat: wd === S.treat });
+    out.push({ y, m, d, wd, key, meals, treat: wd === S.treat });
   }
   return out;
 }
 
+/* Any single day, including ones in the previous or next month (cached per render) */
+let monthCache = {};
+function getDay(y, m, d) {
+  const dt = new Date(y, m, d);
+  const yy = dt.getFullYear(), mm = dt.getMonth();
+  const k = `${yy}-${mm}`;
+  if (!monthCache[k]) monthCache[k] = buildMonth(yy, mm);
+  return monthCache[k][dt.getDate() - 1];
+}
+
 function totals(p) {
   const t = {}; KEYS.forEach(k => t[k] = 0);
-  [...p.meals.map(m => m.dish), ...activeExtras(seasonOf(M))].forEach(x => KEYS.forEach(k => t[k] += x[k]));
+  [...p.meals.map(m => m.dish), ...activeExtras(seasonOf(p.m))].forEach(x => KEYS.forEach(k => t[k] += x[k]));
   return t;
+}
+
+function setDish(key, slot, name) {
+  edits[key] = edits[key] || {};
+  edits[key][slot] = name;
+  store.set('kp2-edits', edits);
 }
 const pct = (t, k) => t[k] / NUT[k].t;
 const level = r => r >= 0.9 ? 'good' : r >= 0.6 ? 'mid' : 'low';
@@ -879,8 +965,13 @@ function renderSeason() {
 }
 
 /* ---------- main render ---------- */
+const phone = window.matchMedia('(max-width: 700px)');
 function render() {
+  monthCache = {};
+  document.body.classList.toggle('dayv', phone.matches && S.view === 'day');
   renderChrome();
+  $('viewSeg').querySelectorAll('button').forEach(b => b.classList.toggle('on', b.dataset.v === S.view));
+  if (phone.matches && S.view === 'day') renderDayView();
   renderSeason();
   const lang = S.lang;
   $('calTitle').textContent = `${MONTHS[lang][M]} ${Y}`;
@@ -1040,22 +1131,18 @@ function renderPanel() {
 
   requestAnimationFrame(() => $('panel').querySelectorAll('.bar i').forEach(i => i.style.width = i.dataset.w + '%'));
 
-  const setDish = (slot, name) => {
-    edits[p.key] = edits[p.key] || {};
-    edits[p.key][slot] = name;
-    store.set('kp2-edits', edits);
-  };
-  $('panel').querySelectorAll('select[data-slot]').forEach(s => s.onchange = () => { setDish(s.dataset.slot, s.value); toast(tr('saved')); render(); });
+  const setP = (slot, name) => setDish(p.key, slot, name);
+  $('panel').querySelectorAll('select[data-slot]').forEach(s => s.onchange = () => { setP(s.dataset.slot, s.value); toast(tr('saved')); render(); });
   $('panel').querySelectorAll('[data-swap]').forEach(b => b.onclick = () => {
     const cur = p.meals.find(m => m.slot === b.dataset.swap).dish.en;
     const choices = seasonPool(b.dataset.list, season).filter(o => o.en !== cur);
     if (!choices.length) return;
     const o = choices[Math.floor(Math.random() * choices.length)];
-    setDish(b.dataset.swap, o.en); toast(tr('swapped', { d: o.e + ' ' + nm(o) })); render();
+    setP(b.dataset.swap, o.en); toast(tr('swapped', { d: o.e + ' ' + nm(o) })); render();
   });
   $('panel').querySelectorAll('.sg[data-i]').forEach(b => b.onclick = () => {
     const s = sugg[+b.dataset.i];
-    setDish(s.slot, s.o.en); toast(tr('added', { d: s.o.e + ' ' + nm(s.o) })); render();
+    setP(s.slot, s.o.en); toast(tr('added', { d: s.o.e + ' ' + nm(s.o) })); render();
   });
   $('cookBtn').onclick = () => {
     if (cooked[p.key]) delete cooked[p.key]; else cooked[p.key] = true;
@@ -1063,6 +1150,120 @@ function renderPanel() {
     toast(tr(cooked[p.key] ? 'cookedT' : 'unmarked'));
     render();
   };
+}
+
+/* =========================================================
+   Phone Day view: today's meals, how yesterday went, and a tip for tomorrow
+   ========================================================= */
+function goDay(n) {
+  const dt = new Date(Y, M, sel + n);
+  Y = dt.getFullYear(); M = dt.getMonth(); sel = dt.getDate();
+  render();
+}
+
+function renderDayView() {
+  const lang = S.lang;
+  const cur = getDay(Y, M, sel), prev = getDay(Y, M, sel - 1), next = getDay(Y, M, sel + 1);
+  const isToday = cur.y === now.getFullYear() && cur.m === now.getMonth() && cur.d === now.getDate();
+  const season = SEASONS[seasonOf(cur.m)];
+  const shortDate = p => `${WD_SHORT[lang][p.wd]} ${p.d}`;
+  const t = totals(cur);
+  const goodLow = p => {
+    const tt = totals(p);
+    return { good: BOOST.filter(k => pct(tt, k) >= 0.9), low: BOOST.filter(k => pct(tt, k) < 0.9) };
+  };
+  const names = ks => ks.slice(0, 3).map(k => NUT[k].i + ' ' + nl(k)).join(', ') + (ks.length > 3 ? '…' : '');
+
+  const mealRow = (m, withSwap) => `
+    <div class="dv-meal ${m.list === 'tiffin' ? 'tf' : ''}">
+      <span class="emo">${m.dish.e}</span>
+      <div class="info"><small>${tr(m.label)}</small><b>${nm(m.dish)}</b>
+        ${withSwap ? `<small>🔥 ${m.dish.kcal} ${unit('kcal')} · 💪 ${m.dish.p}g</small>` : ''}</div>
+      ${withSwap ? `<button class="btn sm" data-dvswap="${m.slot}" data-list="${m.list}" aria-label="${tr('swap')}">🔀</button>` : ''}
+    </div>`;
+
+  /* Today */
+  const gl = goodLow(cur);
+  const bars = KEYS.map(k => {
+    const r = pct(t, k);
+    return `<div class="bar-row"><span>${NUT[k].i} ${nl(k)}</span>
+      <div class="bar"><i class="${level(r)}" style="width:${Math.min(100, Math.round(r * 100))}%"></i></div>
+      <span class="val">${fmt(t[k], k)}/${NUT[k].t} ${unit(k)}</span></div>`;
+  }).join('');
+
+  /* Yesterday */
+  const yl = goodLow(prev);
+
+  /* Tomorrow: find a nutrient low both yesterday and today, then the in-season swap for tomorrow that adds the most */
+  const tPrev = totals(prev);
+  const lowBoth = BOOST.filter(k => pct(t, k) < 0.9 && pct(tPrev, k) < 0.9)
+    .sort((a, b) => (pct(t, a) + pct(tPrev, a)) - (pct(t, b) + pct(tPrev, b)));
+  let tip = null;
+  for (const k of lowBoth) {
+    let best = null;
+    next.meals.filter(m => m.slot !== 'sweet').forEach(m => {
+      seasonPool(m.list, seasonOf(next.m)).forEach(o => {
+        const g = o[k] - m.dish[k];
+        if (o.en !== m.dish.en && g > 0 && (!best || g > best.g)) best = { k, m, o, g };
+      });
+    });
+    if (best) { tip = best; break; }
+  }
+
+  $('dayView').innerHTML = `
+    <div class="card dv-nav">
+      <button class="btn" id="dvPrev" aria-label="Previous day">◀</button>
+      <div class="dv-date"><b>${WD[lang][cur.wd]}</b>
+        <span>${cur.d} ${MONTHS[lang][cur.m]} ${cur.y}${isToday ? ' · ' + tr('todayTag') : ''}</span></div>
+      <button class="btn" id="dvNext" aria-label="Next day">▶</button>
+    </div>
+    <div class="dv-season">${season.icon} ${L(season).split('·')[0]} · ${tr('inSeasonShort')} ${season.veg.split(',').slice(0, 5).map(x => x.split('|')[lang === 'hi' ? 1 : 0]).join(', ')}</div>
+
+    <div class="card dv-card">
+      <h3><span>${cur.treat ? tr('subTreat') : isSchool(cur.wd) ? tr('subSchool') : tr('subHome')}</span>
+        ${cur.treat ? `<span class="tag t">${tr('tagTreat')}</span>` : `<span class="tag h">${tr('tagHealthy')}</span>`}</h3>
+      ${cur.meals.map(m => mealRow(m, true)).join('')}
+      <div class="dv-mini" style="margin-top:8px">📊 ${tr('metN', { a: gl.good.length, b: BOOST.length })}<br>
+        ${gl.low.length ? `<span class="lo">${tr('low')}</span> ${names(gl.low)}` : `<span class="ok">${tr('allGood')}</span>`}</div>
+      <details class="dv-more"><summary>${tr('seeAll')}</summary>${bars}</details>
+      <button class="btn ${cooked[cur.key] ? '' : 'primary'} dv-full" id="dvCook">${tr(cooked[cur.key] ? 'cooked' : 'markToday')}</button>
+    </div>
+
+    <div class="card dv-card">
+      <h3><span>${tr('yesterday')} · ${shortDate(prev)}</span>
+        ${cooked[prev.key] ? `<span class="tag h">${tr('cooked')}</span>` : `<button class="btn sm" id="dvCookPrev">${tr('markIt')}</button>`}</h3>
+      <div class="dv-list">${prev.meals.map(m => `${m.dish.e} ${nm(m.dish)}`).join(' · ')}</div>
+      <div class="dv-mini">
+        ${yl.good.length ? `<span class="ok">${tr('good')}</span> ${names(yl.good)}<br>` : ''}
+        ${yl.low.length ? `<span class="lo">${tr('low')}</span> ${names(yl.low)}` : `<span class="ok">${tr('allGood')}</span>`}
+      </div>
+    </div>
+
+    <div class="card dv-card">
+      <h3><span>${tr('tomorrow')} · ${shortDate(next)}</span>
+        ${next.treat ? `<span class="tag t">${tr('tagTreat')}</span>` : ''}</h3>
+      ${next.meals.map(m => mealRow(m, false)).join('')}
+      <div class="dv-sugg">${tip
+        ? `${tr('lowBoth', { n: NUT[tip.k].i + ' ' + nl(tip.k) })} ${tr('tryFor', { d: tip.o.e + ' <b>' + nm(tip.o) + '</b>', s: tr(tip.m.label).replace('🎒 ', ''), g: fmt(tip.g, tip.k), u: unit(tip.k) })}
+           <br><button class="btn sm primary" id="dvUse">${tr('useIt')}</button>`
+        : tr('balanced')}</div>
+    </div>`;
+
+  $('dvPrev').onclick = () => goDay(-1);
+  $('dvNext').onclick = () => goDay(1);
+  $('dvCook').onclick = () => {
+    if (cooked[cur.key]) delete cooked[cur.key]; else cooked[cur.key] = true;
+    store.set('kp2-cooked', cooked); toast(tr(cooked[cur.key] ? 'cookedT' : 'unmarked')); render();
+  };
+  if ($('dvCookPrev')) $('dvCookPrev').onclick = () => { cooked[prev.key] = true; store.set('kp2-cooked', cooked); toast(tr('cookedT')); render(); };
+  if ($('dvUse')) $('dvUse').onclick = () => { setDish(next.key, tip.m.slot, tip.o.en); toast(tr('usedT')); render(); };
+  $('dayView').querySelectorAll('[data-dvswap]').forEach(b => b.onclick = () => {
+    const curName = cur.meals.find(m => m.slot === b.dataset.dvswap).dish.en;
+    const choices = seasonPool(b.dataset.list, seasonOf(cur.m)).filter(o => o.en !== curName);
+    if (!choices.length) return;
+    const o = choices[Math.floor(Math.random() * choices.length)];
+    setDish(cur.key, b.dataset.dvswap, o.en); toast(tr('swapped', { d: o.e + ' ' + nm(o) })); render();
+  });
 }
 
 let toastTimer;
@@ -1099,6 +1300,16 @@ $('reset').onclick = () => {
   render();
 };
 $('print').onclick = () => window.print();
+
+/* phone-only controls */
+$('viewSeg').querySelectorAll('button').forEach(b => b.onclick = () => { S.view = b.dataset.v; saveSettings(); render(); window.scrollTo(0, 0); });
+$('optBtn').onclick = () => $('options').classList.toggle('open');
+$('mToday').onclick = () => $('todayBtn').onclick();
+$('mShuffle').onclick = () => $('shuffle').onclick();
+$('mReset').onclick = () => $('reset').onclick();
+$('mPrint').onclick = () => window.print();
+phone.addEventListener('change', render);
+
 document.addEventListener('keydown', e => {
   if (['SELECT', 'INPUT'].includes(e.target.tagName)) return;
   if (e.key === 'ArrowLeft') go(-1);
