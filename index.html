@@ -91,7 +91,9 @@
   .cal { background: var(--card); border-radius: 22px; padding: 14px; box-shadow: var(--shadow); }
   .cal-title { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
   .cal-title h2 { font-size: 1.6rem; color: var(--saffron-d); }
-  .weekdays, .grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
+  .layout > * { min-width: 0; }
+  .weekdays, .grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px; }
+  .day { min-width: 0; }
   .weekdays div { text-align: center; font-weight: 800; font-family: 'Baloo 2'; color: var(--muted); font-size: .95rem; padding: 4px 0; }
   .weekdays div:first-child { color: var(--treat); }
   .day {
