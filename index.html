@@ -1,174 +1,260 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="masala">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Khaana Planner</title>
-<meta name="description" content="A month-by-month Indian vegetarian meal planner: healthy weekdays, school tiffins with nutrients, and Sunday treat days.">
+<meta name="description" content="Khaana Planner by Nivriti Rajput: a month-by-month Indian vegetarian and vegan meal planner with seasonal North Indian food, school tiffins, treat days and full nutrient tracking. In English and Hindi.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg: #fff8ef;
-    --card: #ffffff;
-    --ink: #3b2416;
-    --muted: #8a6d5a;
-    --line: #f1dfcc;
-    --saffron: #f28c28;
-    --saffron-d: #c9620a;
-    --green: #2f9e5b;
-    --green-l: #e5f6eb;
-    --treat: #e2456b;
-    --treat-l: #ffe8ee;
-    --tiffin: #3a7bd5;
-    --tiffin-l: #e7f0fd;
-    --gold: #f6c343;
+  /* ---------- themes ---------- */
+  :root, [data-theme="masala"] {
+    --bg: #fff8ef; --card: #ffffff; --cell: #fffdf9; --chip: #ffffff;
+    --ink: #3b2416; --muted: #8a6d5a; --line: #f1dfcc;
+    --accent: #f28c28; --accent-d: #c9620a; --accent-2: #ffb347;
+    --glow1: #ffe6c7; --glow2: #e6f7ea;
+    --green: #2f9e5b; --green-l: #e5f6eb; --good-bg: #f1faf4;
+    --amber: #d99a00; --amber-l: #fff4d6;
+    --red: #d9534f; --red-l: #fde8e7;
+    --treat: #e2456b; --treat-l: #ffe8ee; --treat-b: #ffc6d3;
+    --tiffin: #3a7bd5; --tiffin-l: #e7f0fd; --tiffin-b: #c4d9f7;
+    --vegan: #3c9d3c;
     --shadow: 0 8px 24px rgba(160, 90, 30, .12);
   }
+  [data-theme="gulabi"] {
+    --bg: #fff2f8; --cell: #fffafd; --ink: #4a1a37; --muted: #9a5f80; --line: #f8d6e7;
+    --accent: #e8559b; --accent-d: #b8236a; --accent-2: #ff9ccb;
+    --glow1: #ffd6ea; --glow2: #efe0ff;
+    --shadow: 0 8px 24px rgba(200, 60, 130, .14);
+  }
+  [data-theme="pudina"] {
+    --bg: #f1fbf5; --cell: #fbfffc; --ink: #173b2a; --muted: #5d8571; --line: #d4eedf;
+    --accent: #1f9d6b; --accent-d: #12704b; --accent-2: #6fd3a5;
+    --glow1: #d7f5e5; --glow2: #fff3d1;
+    --shadow: 0 8px 24px rgba(20, 110, 70, .12);
+  }
+  [data-theme="raat"] {
+    --bg: #17120f; --card: #241c17; --cell: #2b221c; --chip: #33291f;
+    --ink: #f6e9dc; --muted: #c3a894; --line: #45372b;
+    --accent: #ff9a3c; --accent-d: #ffb066; --accent-2: #ffcf8a;
+    --glow1: #2a1d12; --glow2: #13241b;
+    --green: #5cc98a; --green-l: #1d3627; --good-bg: #1d3025;
+    --amber: #f0c040; --amber-l: #3a3018;
+    --red: #ff7b76; --red-l: #3d2222;
+    --treat: #ff7a9a; --treat-l: #3a1f2a; --treat-b: #6a3346;
+    --tiffin: #7fb0ff; --tiffin-l: #1c2738; --tiffin-b: #34486a;
+    --vegan: #6fd36f;
+    --shadow: 0 8px 24px rgba(0, 0, 0, .4);
+  }
+
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
-    font-family: 'Nunito', system-ui, sans-serif;
+    font-family: 'Nunito', 'Baloo 2', system-ui, sans-serif;
     color: var(--ink);
     background:
-      radial-gradient(circle at 10% 0%, #ffe6c7 0, transparent 40%),
-      radial-gradient(circle at 100% 30%, #e6f7ea 0, transparent 35%),
+      radial-gradient(circle at 10% 0%, var(--glow1) 0, transparent 40%),
+      radial-gradient(circle at 100% 30%, var(--glow2) 0, transparent 35%),
       var(--bg);
     min-height: 100vh;
+    transition: background-color .3s, color .3s;
   }
   h1, h2, h3, .brand, button, select { font-family: 'Baloo 2', system-ui, sans-serif; }
-  .wrap { max-width: 1240px; margin: 0 auto; padding: 0 16px 48px; }
+  .wrap { max-width: 1400px; margin: 0 auto; padding: 0 16px 48px; }
+  .card { background: var(--card); border-radius: 22px; box-shadow: var(--shadow); }
 
   /* ---------- header ---------- */
-  header {
-    display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;
-    padding: 22px 0 14px;
-  }
+  header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; padding: 22px 0 14px; }
   .brand { display: flex; align-items: center; gap: 12px; }
   .logo {
-    width: 54px; height: 54px; border-radius: 16px;
-    background: linear-gradient(135deg, var(--saffron), #ffb347);
+    width: 54px; height: 54px; border-radius: 16px; flex: none;
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
     display: grid; place-items: center; font-size: 30px;
-    box-shadow: 0 6px 16px rgba(242,140,40,.4);
+    box-shadow: 0 6px 16px rgba(0,0,0,.15);
     animation: steam 3s ease-in-out infinite;
   }
   @keyframes steam { 0%,100% { transform: rotate(-4deg); } 50% { transform: rotate(4deg) translateY(-3px); } }
-  .brand h1 { font-size: 2rem; line-height: 1; color: var(--saffron-d); }
-  .brand small { display: block; color: var(--muted); font-family: 'Nunito'; font-weight: 600; font-size: .9rem; margin-top: 4px; }
+  .brand h1 { font-size: 2rem; line-height: 1; color: var(--accent-d); }
+  .brand small { display: block; color: var(--muted); font-weight: 600; font-size: .9rem; margin-top: 4px; }
 
   .controls { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
   .btn {
-    border: none; cursor: pointer; font-weight: 700; font-size: 1rem;
-    padding: 8px 16px; border-radius: 12px;
+    cursor: pointer; font-weight: 700; font-size: 1rem;
+    padding: 7px 14px; border-radius: 12px;
     background: var(--card); color: var(--ink);
-    box-shadow: 0 2px 0 var(--line), 0 4px 10px rgba(0,0,0,.05);
+    box-shadow: 0 2px 0 var(--line);
     border: 2px solid var(--line);
     transition: transform .15s, background .15s;
   }
   .btn:hover { transform: translateY(-2px); }
-  .btn.primary { background: var(--saffron); color: #fff; border-color: var(--saffron-d); box-shadow: 0 3px 0 var(--saffron-d); }
-  .btn.icon { padding: 8px 12px; }
+  .btn:active { transform: translateY(1px); }
+  .btn.primary { background: var(--accent); color: #fff; border-color: var(--accent-d); box-shadow: 0 3px 0 var(--accent-d); }
+  [data-theme="raat"] .btn.primary { color: #1a120c; }
+  .btn.sm { font-size: .85rem; padding: 3px 10px; border-radius: 10px; }
   select {
-    font-size: 1rem; font-weight: 700; padding: 8px 10px; border-radius: 12px;
+    font-size: 1rem; font-weight: 700; padding: 7px 10px; border-radius: 12px;
     border: 2px solid var(--line); background: var(--card); color: var(--ink); cursor: pointer;
   }
 
-  /* ---------- legend + summary ---------- */
-  .strip {
-    display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between;
-    background: var(--card); border-radius: 18px; padding: 12px 16px; box-shadow: var(--shadow);
-    margin-bottom: 16px;
+  /* ---------- options ---------- */
+  .options { padding: 14px 16px; margin-bottom: 14px; display: flex; flex-wrap: wrap; gap: 14px 22px; align-items: flex-end; }
+  .opt { display: flex; flex-direction: column; gap: 4px; }
+  .opt > label, .opt > .lbl { font-size: .78rem; font-weight: 800; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
+  .seg { display: inline-flex; background: var(--bg); border: 2px solid var(--line); border-radius: 14px; padding: 3px; gap: 3px; }
+  .seg button { border: none; background: transparent; font-weight: 700; font-size: .98rem; padding: 5px 12px; border-radius: 10px; cursor: pointer; color: var(--ink); }
+  .seg button.on { background: var(--accent); color: #fff; }
+  .seg button.on.vg { background: var(--vegan); }
+  [data-theme="raat"] .seg button.on { color: #1a120c; }
+  .checks { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chk {
+    display: inline-flex; align-items: center; gap: 6px; cursor: pointer;
+    background: var(--bg); border: 2px solid var(--line); border-radius: 999px;
+    padding: 4px 12px; font-weight: 700; font-size: .9rem; user-select: none;
   }
-  .legend { display: flex; flex-wrap: wrap; gap: 14px; font-weight: 700; font-size: .92rem; }
+  .chk input { accent-color: var(--green); width: 16px; height: 16px; }
+  .chk.on { background: var(--green-l); border-color: var(--green); }
+
+  /* ---------- season card ---------- */
+  .season { padding: 16px; margin-bottom: 14px; display: grid; grid-template-columns: auto 1fr; gap: 6px 16px; align-items: start; overflow: hidden; position: relative; }
+  .season .big { font-size: 3.2rem; line-height: 1; animation: float 4s ease-in-out infinite; grid-row: span 2; }
+  @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+  .season h2 { font-size: 1.35rem; color: var(--accent-d); line-height: 1.2; }
+  .season .wx { font-weight: 700; color: var(--muted); font-size: .92rem; }
+  .season-body { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 10px 18px; margin-top: 6px; }
+  .season .lbl2 { font-weight: 800; font-size: .88rem; margin-bottom: 4px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 5px; }
+  .chips span { background: var(--bg); border: 1px solid var(--line); border-radius: 999px; padding: 2px 10px; font-size: .84rem; font-weight: 700; }
+  .season .tipbox { background: var(--green-l); border-radius: 12px; padding: 8px 12px; font-size: .9rem; font-weight: 600; }
+
+  /* ---------- legend + summary ---------- */
+  .strip { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; padding: 12px 16px; margin-bottom: 14px; }
+  .legend { display: flex; flex-wrap: wrap; gap: 14px; font-weight: 700; font-size: .9rem; }
   .legend span { display: inline-flex; align-items: center; gap: 6px; }
   .dot { width: 14px; height: 14px; border-radius: 4px; display: inline-block; }
-  .summary { display: flex; flex-wrap: wrap; gap: 8px; font-size: .9rem; }
+  .summary { display: flex; flex-wrap: wrap; gap: 8px; font-size: .88rem; }
   .pill { background: var(--bg); border: 1px solid var(--line); border-radius: 999px; padding: 4px 12px; font-weight: 700; }
 
   /* ---------- layout ---------- */
-  .layout { display: grid; grid-template-columns: 1fr 380px; gap: 18px; align-items: start; }
+  .layout { display: grid; grid-template-columns: 1fr; gap: 18px; align-items: start; }
+  .layout > * { min-width: 0; }
+  @media (min-width: 1360px) {
+    .layout { grid-template-columns: minmax(0, 1fr) 420px; }
+    .panel { position: sticky; top: 14px; max-height: calc(100vh - 28px); overflow-y: auto; }
+  }
 
   /* ---------- calendar ---------- */
-  .cal { background: var(--card); border-radius: 22px; padding: 14px; box-shadow: var(--shadow); }
-  .cal-title { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
-  .cal-title h2 { font-size: 1.6rem; color: var(--saffron-d); }
-  .layout > * { min-width: 0; }
+  .cal { padding: 14px; }
+  .cal-title { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; margin-bottom: 10px; }
+  .cal-title h2 { font-size: 1.6rem; color: var(--accent-d); }
+  .heat-legend { display: flex; flex-wrap: wrap; gap: 10px; font-size: .8rem; font-weight: 700; color: var(--muted); }
   .weekdays, .grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px; }
-  .day { min-width: 0; }
   .weekdays div { text-align: center; font-weight: 800; font-family: 'Baloo 2'; color: var(--muted); font-size: .95rem; padding: 4px 0; }
-  .weekdays div:first-child { color: var(--treat); }
+  .weekdays div.treatcol { color: var(--treat); }
   .day {
-    min-height: 118px; border-radius: 14px; padding: 6px 7px;
-    background: #fffdf9; border: 2px solid var(--line);
+    min-width: 0; min-height: 124px; border-radius: 14px; padding: 6px 7px;
+    background: var(--cell); border: 2px solid var(--line);
     cursor: pointer; display: flex; flex-direction: column; gap: 3px;
     transition: transform .15s, border-color .15s, box-shadow .15s;
     animation: fadeUp .4s ease both;
-    text-align: left; font: inherit; color: inherit;
+    text-align: left; font: inherit; color: inherit; position: relative;
   }
   @keyframes fadeUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
-  .day:hover { transform: translateY(-2px); border-color: var(--saffron); }
-  .day.selected { border-color: var(--saffron); box-shadow: 0 0 0 3px rgba(242,140,40,.25); }
-  .day.today .num { background: var(--saffron); color: #fff; }
-  .day.sunday { background: var(--treat-l); border-color: #ffc6d3; }
-  .day.sunday:hover, .day.sunday.selected { border-color: var(--treat); }
+  .day:hover { transform: translateY(-2px); border-color: var(--accent); }
+  .day.selected { border-color: var(--accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 30%, transparent); }
+  .day.today .num { background: var(--accent); color: #fff; }
+  .day.treat { background: var(--treat-l); border-color: var(--treat-b); }
+  .day.treat:hover, .day.treat.selected { border-color: var(--treat); }
+  .day.h-good { background: var(--good-bg); }
+  .day.h-mid  { background: var(--amber-l); }
+  .day.h-low  { background: var(--red-l); }
+  .day.cooked::after { content: '✓'; position: absolute; right: 7px; bottom: 4px; font-size: .85rem; font-weight: 800; color: var(--green); }
   .day.empty { background: transparent; border: none; cursor: default; animation: none; }
-  .day-head { display: flex; justify-content: space-between; align-items: center; }
-  .wdname { display: none; font-weight: 800; color: var(--muted); margin-left: 6px; }
+  .day-head { display: flex; justify-content: space-between; align-items: center; gap: 4px; }
   .day-head > span:first-child { display: inline-flex; align-items: center; }
-  .num { font-family: 'Baloo 2'; font-weight: 800; font-size: 1rem; width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; }
-  .tag { font-size: .68rem; font-weight: 800; padding: 1px 7px; border-radius: 999px; }
+  .num { font-family: 'Baloo 2'; font-weight: 800; font-size: 1rem; width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; flex: none; }
+  .wdname { display: none; font-weight: 800; color: var(--muted); margin-left: 6px; }
+  .tag { font-size: .66rem; font-weight: 800; padding: 1px 7px; border-radius: 999px; white-space: nowrap; }
   .tag.h { background: var(--green-l); color: var(--green); }
-  .tag.t { background: #fff; color: var(--treat); }
+  .tag.t { background: var(--chip); color: var(--treat); }
+  .tag.v { background: var(--green-l); color: var(--vegan); }
+  .tag.s { background: var(--amber-l); color: var(--amber); }
   .meal-line { font-size: .74rem; line-height: 1.25; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .meal-line.tf { color: var(--tiffin); font-weight: 700; }
-  .meal-line .edited { color: var(--saffron-d); }
-  .kcal { margin-top: auto; font-size: .7rem; font-weight: 800; color: var(--muted); }
+  .meal-line .edited { color: var(--accent-d); }
+  .kcal { margin-top: auto; font-size: .68rem; font-weight: 800; color: var(--muted); }
+  .heat { font-size: .68rem; font-weight: 800; }
+
+  /* ---------- month report ---------- */
+  .report { padding: 16px; margin-top: 18px; }
+  .report h2 { font-size: 1.4rem; color: var(--accent-d); margin-bottom: 4px; }
+  .report .sub { color: var(--muted); font-weight: 700; font-size: .9rem; margin-bottom: 12px; }
+  .tiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+  .tile { border-radius: 16px; padding: 10px 12px; border: 2px solid var(--line); background: var(--cell); }
+  .tile .t1 { font-weight: 800; font-size: .88rem; }
+  .tile .t2 { font-family: 'Baloo 2'; font-weight: 800; font-size: 1.5rem; line-height: 1.1; }
+  .tile .t3 { font-size: .75rem; color: var(--muted); font-weight: 700; }
+  .tile.good { border-color: var(--green); background: var(--good-bg); } .tile.good .t2 { color: var(--green); }
+  .tile.mid  { border-color: var(--amber); background: var(--amber-l); } .tile.mid .t2 { color: var(--amber); }
+  .tile.low  { border-color: var(--red); background: var(--red-l); } .tile.low .t2 { color: var(--red); }
+  .progress { height: 12px; background: var(--bg); border-radius: 999px; overflow: hidden; border: 1px solid var(--line); margin-top: 6px; }
+  .progress i { display: block; height: 100%; background: linear-gradient(90deg, var(--green), var(--accent-2)); width: 0; transition: width .8s; }
+  .tips { margin-top: 12px; display: grid; gap: 8px; }
+  .tip { background: var(--bg); border-radius: 12px; padding: 8px 12px; font-size: .9rem; }
 
   /* ---------- day panel ---------- */
-  .panel { background: var(--card); border-radius: 22px; padding: 18px; box-shadow: var(--shadow); position: sticky; top: 14px; }
+  .panel { padding: 18px; }
+  .panel-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
   .panel h2 { font-size: 1.45rem; line-height: 1.15; }
   .panel .sub { color: var(--muted); font-weight: 700; margin: 2px 0 12px; }
-  .banner { border-radius: 14px; padding: 10px 12px; font-weight: 700; font-size: .92rem; margin-bottom: 12px; }
-  .banner.h { background: var(--green-l); color: #1f6e3f; }
-  .banner.t { background: var(--treat-l); color: #a52448; }
-  .meal { border: 2px solid var(--line); border-radius: 16px; padding: 12px; margin-bottom: 10px; animation: fadeUp .35s ease both; }
-  .meal.tiffin { border-color: #c4d9f7; background: var(--tiffin-l); }
-  .meal.treat { border-color: #ffc6d3; background: #fff6f8; }
+  .banner { border-radius: 14px; padding: 10px 12px; font-weight: 700; font-size: .9rem; margin-bottom: 12px; }
+  .banner.h { background: var(--green-l); color: var(--green); }
+  .banner.t { background: var(--treat-l); color: var(--treat); }
+  .meals { display: grid; gap: 10px; }
+  @media (min-width: 700px) and (max-width: 1359px) { .meals { grid-template-columns: 1fr 1fr; } }
+  .meal { border: 2px solid var(--line); border-radius: 16px; padding: 12px; animation: fadeUp .35s ease both; }
+  .meal.tiffin { border-color: var(--tiffin-b); background: var(--tiffin-l); }
+  .meal.treat { border-color: var(--treat-b); background: var(--treat-l); }
   .meal-top { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 6px; }
   .slot { font-family: 'Baloo 2'; font-weight: 800; font-size: .95rem; color: var(--muted); }
   .meal.tiffin .slot { color: var(--tiffin); }
   .meal.treat .slot { color: var(--treat); }
   .dish { display: flex; align-items: center; gap: 10px; }
   .dish .emo { font-size: 2rem; }
-  .dish .name { font-family: 'Baloo 2'; font-weight: 700; font-size: 1.12rem; line-height: 1.2; }
-  .dish .boost { font-size: .8rem; color: var(--green); font-weight: 700; }
-  .meal.treat .dish .boost { color: var(--treat); }
-  .nutri { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 8px; }
-  .nutri span { font-size: .74rem; font-weight: 800; padding: 2px 8px; border-radius: 999px; background: #fff; border: 1px solid var(--line); }
-  .meal select { width: 100%; margin-top: 8px; font-size: .9rem; padding: 6px 8px; }
+  .dish .name { font-family: 'Baloo 2'; font-weight: 700; font-size: 1.1rem; line-height: 1.2; }
+  .badges { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 2px; }
+  .nutri { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 8px; }
+  .nutri span { font-size: .72rem; font-weight: 800; padding: 2px 7px; border-radius: 999px; background: var(--chip); border: 1px solid var(--line); }
+  .meal-actions { display: flex; gap: 6px; margin-top: 8px; }
+  .meal-actions select { flex: 1; min-width: 0; font-size: .88rem; padding: 5px 8px; }
 
-  .totals { border-radius: 16px; background: var(--bg); padding: 12px; margin-top: 4px; }
-  .totals h3 { font-size: 1.05rem; margin-bottom: 6px; }
-  .bar-row { display: grid; grid-template-columns: 74px 1fr 82px; align-items: center; gap: 8px; font-size: .82rem; font-weight: 700; margin: 5px 0; }
-  .bar { height: 10px; background: #fff; border-radius: 999px; overflow: hidden; border: 1px solid var(--line); }
-  .bar i { display: block; height: 100%; border-radius: 999px; background: var(--green); width: 0; transition: width .8s cubic-bezier(.3,1.2,.5,1); }
-  .bar i.over { background: var(--treat); }
-  .note { font-size: .74rem; color: var(--muted); margin-top: 8px; }
+  .section-title { font-family: 'Baloo 2'; font-weight: 800; font-size: 1.05rem; margin: 14px 0 6px; }
+  .suggest { display: flex; flex-wrap: wrap; gap: 6px; }
+  .sg {
+    border: 2px dashed var(--green); background: var(--good-bg); border-radius: 12px; padding: 6px 10px;
+    cursor: pointer; font: inherit; font-size: .85rem; font-weight: 700; text-align: left; color: var(--ink);
+    transition: transform .15s;
+  }
+  .sg:hover { transform: translateY(-2px); border-style: solid; }
+  .sg small { display: block; color: var(--green); font-weight: 800; }
+
+  .totals { border-radius: 16px; background: var(--bg); padding: 12px; margin-top: 12px; }
+  .bar-row { display: grid; grid-template-columns: 112px 1fr 96px; align-items: center; gap: 8px; font-size: .8rem; font-weight: 700; margin: 5px 0; }
+  .bar { height: 10px; background: var(--chip); border-radius: 999px; overflow: hidden; border: 1px solid var(--line); }
+  .bar i { display: block; height: 100%; border-radius: 999px; width: 0; transition: width .8s cubic-bezier(.3,1.2,.5,1); }
+  .bar i.good { background: var(--green); } .bar i.mid { background: var(--amber); } .bar i.low { background: var(--red); } .bar i.over { background: var(--treat); }
+  .bar-row .val { text-align: right; }
+  .note { font-size: .78rem; color: var(--muted); margin-top: 8px; }
 
   .toast {
     position: fixed; bottom: 20px; left: 50%; transform: translate(-50%, 120px);
-    background: var(--ink); color: #fff; font-weight: 700; padding: 10px 18px; border-radius: 12px;
-    transition: transform .3s; z-index: 20;
+    background: var(--ink); color: var(--bg); font-weight: 700; padding: 10px 18px; border-radius: 12px;
+    transition: transform .3s; z-index: 20; max-width: calc(100% - 32px); text-align: center;
   }
   .toast.show { transform: translate(-50%, 0); }
 
   footer { text-align: center; color: var(--muted); font-size: .85rem; margin-top: 28px; }
-  .madeby { font-family: 'Baloo 2'; font-size: 1.15rem; color: var(--saffron-d); margin-bottom: 4px; }
+  .madeby { font-family: 'Baloo 2'; font-size: 1.15rem; color: var(--accent-d); margin-bottom: 4px; }
 
-  /* ---------- responsive ---------- */
-  @media (max-width: 980px) {
-    .layout { grid-template-columns: 1fr; }
-    .panel { position: static; }
-  }
   @media (max-width: 680px) {
     .weekdays { display: none; }
     .grid { grid-template-columns: 1fr; }
@@ -177,15 +263,17 @@
     .wdname { display: inline; }
     .meal-line { font-size: .84rem; white-space: normal; }
     .brand h1 { font-size: 1.6rem; }
+    .bar-row { grid-template-columns: 92px 1fr 84px; }
+    .season .big { font-size: 2.4rem; }
   }
 
-  /* ---------- print: the month on one page ---------- */
   @media print {
-    body { background: #fff; }
-    .controls, .panel, .strip .summary, .toast { display: none !important; }
+    body { background: #fff; color: #000; }
+    .controls, .options, .season, .panel, .report, .strip .summary, .toast { display: none !important; }
     .layout { grid-template-columns: 1fr; }
-    .cal { box-shadow: none; padding: 0; }
-    .day { min-height: 92px; break-inside: avoid; animation: none; }
+    .card { box-shadow: none; }
+    .cal { padding: 0; }
+    .day { min-height: 92px; break-inside: avoid; animation: none; background: #fff !important; }
     .meal-line { white-space: normal; font-size: .64rem; }
   }
   @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
@@ -197,158 +285,427 @@
     <div class="brand">
       <div class="logo">🍛</div>
       <div>
-        <h1>Khaana Planner</h1>
-        <small>Indian veg meals for every day of the year · Made by <b>Nivriti Rajput</b> 👩‍🍳</small>
+        <h1 id="appName">Khaana Planner</h1>
+        <small id="tagline"></small>
       </div>
     </div>
     <div class="controls">
-      <button class="btn icon" id="prev" aria-label="Previous month">◀</button>
+      <button class="btn" id="prev" aria-label="Previous month">◀</button>
       <select id="monthSel" aria-label="Month"></select>
       <select id="yearSel" aria-label="Year"></select>
-      <button class="btn icon" id="next" aria-label="Next month">▶</button>
-      <button class="btn" id="todayBtn">Today</button>
-      <button class="btn primary" id="shuffle">🔀 New plan</button>
-      <button class="btn" id="reset" title="Undo your own changes for this month">↺ Reset edits</button>
-      <button class="btn" id="print">🖨️ Print</button>
+      <button class="btn" id="next" aria-label="Next month">▶</button>
+      <button class="btn" id="todayBtn"></button>
+      <button class="btn primary" id="shuffle"></button>
+      <button class="btn" id="reset"></button>
+      <button class="btn" id="print"></button>
     </div>
   </header>
 
-  <div class="strip">
-    <div class="legend">
-      <span><i class="dot" style="background:var(--green)"></i>Healthy day</span>
-      <span><i class="dot" style="background:var(--treat)"></i>Sunday treat day</span>
-      <span><i class="dot" style="background:var(--tiffin)"></i>🎒 School tiffin (Mon–Fri)</span>
-    </div>
+  <section class="card options" aria-label="Options">
+    <div class="opt"><span class="lbl" data-t="language"></span>
+      <div class="seg" id="langSeg"><button data-v="en">English</button><button data-v="hi">हिंदी</button></div></div>
+    <div class="opt"><span class="lbl" data-t="diet"></span>
+      <div class="seg" id="dietSeg"><button data-v="veg" data-t="veg"></button><button data-v="vegan" class="vg" data-t="vegan"></button></div></div>
+    <div class="opt"><label for="themeSel" data-t="theme"></label><select id="themeSel"></select></div>
+    <div class="opt"><label for="treatSel" data-t="treatDay"></label><select id="treatSel"></select></div>
+    <div class="opt"><label for="schoolSel" data-t="schoolDays"></label><select id="schoolSel"></select></div>
+    <div class="opt"><label for="colorSel" data-t="colorBy"></label><select id="colorSel"></select></div>
+    <div class="opt"><span class="lbl" data-t="extras"></span><div class="checks" id="extras"></div></div>
+  </section>
+
+  <section class="card season" id="season" aria-label="Season"></section>
+
+  <div class="card strip">
+    <div class="legend" id="legend"></div>
     <div class="summary" id="summary"></div>
   </div>
 
   <div class="layout">
-    <section class="cal">
-      <div class="cal-title"><h2 id="calTitle"></h2></div>
-      <div class="weekdays"><div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div></div>
-      <div class="grid" id="grid"></div>
-    </section>
-    <aside class="panel" id="panel" aria-live="polite"></aside>
+    <div>
+      <section class="card cal">
+        <div class="cal-title"><h2 id="calTitle"></h2><div class="heat-legend" id="heatLegend"></div></div>
+        <div class="weekdays" id="weekdays"></div>
+        <div class="grid" id="grid"></div>
+      </section>
+      <section class="card report" id="report" aria-label="Month nutrition report"></section>
+    </div>
+    <aside class="card panel" id="panel" aria-live="polite"></aside>
   </div>
 
-  <footer><p class="madeby">Made with 💛 by <b>Nivriti Rajput</b></p>Nutrient values are rough estimates per child-sized serving, meant as a guide, not medical advice. Your changes are saved in this browser only.</footer>
+  <footer>
+    <p class="madeby" id="madeby"></p>
+    <span id="disclaimer"></span>
+  </footer>
 </div>
 <div class="toast" id="toast"></div>
 
 <script>
 /* =========================================================
-   Dish library: [name, emoji, kcal, protein g, carbs g, fat g, fibre g, key nutrient]
-   Values are approximate for one child-sized serving.
+   Text in English and Hindi
    ========================================================= */
-const D = {
-  breakfast: [
-    ['Vegetable Poha', '🍚', 250, 6, 42, 7, 3, 'Iron'],
-    ['Moong Dal Chilla', '🥞', 230, 13, 28, 7, 5, 'Protein'],
-    ['Vegetable Upma', '🥣', 220, 6, 35, 7, 4, 'Fibre'],
-    ['Idli Sambar', '⚪', 260, 10, 48, 3, 5, 'Protein'],
-    ['Ragi Dosa & Chutney', '🫓', 240, 7, 40, 6, 5, 'Calcium'],
-    ['Oats Veg Uttapam', '🥞', 250, 9, 38, 7, 6, 'Fibre'],
-    ['Besan Chilla with Paneer', '🧀', 280, 15, 24, 13, 5, 'Protein'],
-    ['Daliya with Milk & Nuts', '🥣', 260, 10, 40, 7, 6, 'Fibre'],
-    ['Paneer Paratha & Curd', '🫓', 340, 15, 38, 14, 5, 'Calcium'],
-    ['Sprouts Chaat & Milk', '🌱', 260, 15, 32, 7, 7, 'Protein'],
-    ['Vegetable Sevai', '🍝', 230, 6, 40, 5, 3, 'Vitamin A'],
-    ['Methi Thepla & Curd', '🫓', 300, 10, 40, 11, 5, 'Iron'],
-    ['Pesarattu (Green Moong Dosa)', '🥞', 230, 12, 30, 6, 5, 'Protein'],
-    ['Rava Idli & Coconut Chutney', '⚪', 230, 7, 38, 5, 3, 'Energy'],
-    ['Banana Ragi Porridge', '🍌', 230, 7, 42, 4, 5, 'Calcium'],
-    ['Palak Paratha & Curd', '🥬', 300, 10, 40, 11, 6, 'Iron']
-  ],
-  tiffin: [
-    ['Paneer Kathi Roll', '🌯', 330, 15, 36, 14, 5, 'Protein'],
-    ['Veg Pulao & Raita', '🍚', 320, 8, 50, 9, 4, 'Vitamin A'],
-    ['Mini Idli & Chutney', '⚪', 250, 8, 44, 4, 4, 'Protein'],
-    ['Aloo-Matar Paratha (light oil)', '🫓', 310, 8, 44, 11, 6, 'Fibre'],
-    ['Brown Bread Veg Sandwich', '🥪', 260, 9, 38, 8, 6, 'Fibre'],
-    ['Lemon Rice with Peanuts', '🍋', 300, 7, 48, 9, 3, 'Vitamin C'],
-    ['Corn & Paneer Wrap', '🌽', 310, 14, 36, 12, 5, 'Protein'],
-    ['Veg Uttapam Bites', '🥞', 260, 8, 40, 7, 5, 'Vitamin A'],
-    ['Curd Rice & Pomegranate', '🍚', 270, 8, 44, 6, 2, 'Calcium'],
-    ['Palak Paratha Rolls', '🥬', 300, 10, 40, 11, 6, 'Iron'],
-    ['Besan Chilla Roll', '🌯', 270, 13, 26, 12, 5, 'Protein'],
-    ['Atta Veg Noodles', '🍜', 300, 8, 46, 9, 5, 'Fibre'],
-    ['Paneer Bhurji Roti Roll', '🧀', 320, 16, 30, 15, 4, 'Calcium'],
-    ['Sprouts Tikki & Mint Dip', '🌱', 260, 12, 32, 9, 7, 'Protein'],
-    ['Veg Dalia Khichdi', '🥣', 240, 8, 40, 5, 7, 'Fibre'],
-    ['Moong Dal Dhokla', '🟨', 240, 12, 34, 5, 5, 'Protein']
-  ],
-  homeLunch: [
-    ['Rajma Chawal & Salad', '🫘', 430, 16, 70, 8, 12, 'Protein'],
-    ['Dal, Roti & Bhindi', '🍛', 420, 16, 60, 12, 11, 'Fibre'],
-    ['Kadhi Chawal & Salad', '🍛', 400, 12, 62, 11, 4, 'Calcium'],
-    ['Chole, Roti & Kachumber', '🫘', 440, 17, 62, 12, 13, 'Iron'],
-    ['Sambar Rice & Beans Poriyal', '🍲', 400, 13, 66, 8, 10, 'Fibre'],
-    ['Lobia Curry & Jeera Rice', '🫘', 410, 16, 66, 8, 12, 'Folate']
-  ],
-  dinner: [
-    ['Dal Tadka, Roti & Lauki', '🍛', 400, 16, 60, 10, 10, 'Protein'],
-    ['Palak Paneer & Roti', '🥬', 430, 20, 40, 20, 8, 'Iron'],
-    ['Moong Dal Khichdi & Curd', '🍚', 380, 15, 62, 8, 7, 'Protein'],
-    ['Rajma & Brown Rice', '🫘', 430, 17, 70, 7, 13, 'Fibre'],
-    ['Mix Veg, Dal & Roti', '🥕', 410, 15, 60, 11, 11, 'Vitamin A'],
-    ['Matar Paneer & Roti', '🧀', 440, 19, 44, 20, 8, 'Calcium'],
-    ['Sambar, Rice & Cabbage Poriyal', '🍲', 400, 13, 66, 8, 10, 'Fibre'],
-    ['Aloo Gobhi, Dal & Roti', '🥦', 410, 14, 62, 11, 10, 'Vitamin C'],
-    ['Masoor Dal, Jeera Rice & Salad', '🍛', 400, 17, 64, 7, 9, 'Iron'],
-    ['Baingan Bharta, Dal & Roti', '🍆', 400, 15, 58, 11, 11, 'Fibre'],
-    ['Soya Chunk Curry & Roti', '🥘', 420, 26, 50, 11, 10, 'Protein'],
-    ['Paneer Tikka, Dal & Roti', '🍢', 450, 24, 44, 18, 8, 'Protein'],
-    ['Tori Sabzi, Moong Dal & Roti', '🥒', 380, 15, 58, 9, 10, 'Vitamin C'],
-    ['Methi Dal, Rice & Salad', '🌿', 390, 16, 62, 8, 10, 'Iron'],
-    ['Chana Dal, Roti & Pumpkin Sabzi', '🎃', 410, 17, 60, 10, 12, 'Vitamin A'],
-    ['Veg Dalia Khichdi & Raita', '🥣', 360, 13, 60, 7, 9, 'Fibre']
-  ],
-  sunBreakfast: [
-    ['Aloo Puri', '🥔', 520, 10, 60, 26, 5, 'Treat!'],
-    ['Butter Aloo Paratha', '🧈', 480, 10, 56, 24, 5, 'Treat!'],
-    ['Kachori Sabzi', '🥟', 540, 11, 58, 29, 6, 'Treat!'],
-    ['Bread Pakora & Chai', '🍞', 470, 11, 52, 24, 4, 'Treat!'],
-    ['Butter Masala Dosa', '🌮', 450, 9, 62, 18, 5, 'Treat!'],
-    ['Sabudana Vada & Chutney', '🟤', 460, 6, 58, 22, 3, 'Treat!']
-  ],
-  sunLunch: [
-    ['Chole Bhature', '🫓', 650, 17, 78, 30, 12, 'Treat!'],
-    ['Pav Bhaji', '🍞', 580, 13, 76, 25, 9, 'Treat!'],
-    ['Dal Makhani & Butter Naan', '🧈', 640, 18, 70, 32, 11, 'Treat!'],
-    ['Veg Biryani & Raita', '🍚', 560, 13, 80, 20, 7, 'Treat!'],
-    ['Paneer Butter Masala & Naan', '🧀', 660, 21, 64, 35, 6, 'Treat!'],
-    ['Raj Kachori Chaat', '🥗', 540, 14, 68, 24, 9, 'Treat!']
-  ],
-  sunDinner: [
-    ['Paneer Tikka Pizza', '🍕', 600, 22, 66, 26, 5, 'Treat!'],
-    ['Veg Manchurian & Fried Rice', '🥡', 590, 12, 80, 24, 6, 'Treat!'],
-    ['Malai Kofta & Laccha Paratha', '🍲', 650, 15, 66, 36, 6, 'Treat!'],
-    ['Aloo Tikki & Dahi Bhalla Chaat', '🥔', 520, 13, 68, 21, 7, 'Treat!'],
-    ['Shahi Paneer & Butter Naan', '🧀', 660, 21, 62, 36, 5, 'Treat!'],
-    ['Samosa & Pani Puri Party', '🥟', 560, 11, 70, 26, 7, 'Treat!']
-  ],
-  sweet: [
-    ['Gulab Jamun', '🟤', 180, 3, 28, 7, 0, 'Dessert'],
-    ['Rasmalai', '🍮', 190, 6, 24, 8, 0, 'Dessert'],
-    ['Kesar Kheer', '🍚', 200, 6, 30, 7, 0, 'Dessert'],
-    ['Jalebi & Rabri', '🌀', 240, 4, 36, 10, 0, 'Dessert'],
-    ['Malai Kulfi', '🍡', 180, 5, 20, 9, 0, 'Dessert'],
-    ['Gajar Halwa', '🥕', 220, 4, 30, 10, 2, 'Dessert']
-  ]
+const T = {
+  en: {
+    appName: 'Khaana Planner',
+    tagline: 'Indian veg & vegan meals for every day of the year · Made by <b>Nivriti Rajput</b> 👩‍🍳',
+    madeby: 'Made with 💛 by <b>Nivriti Rajput</b>',
+    disclaimer: 'Nutrient values are rough estimates per child-sized serving, and daily goals are an approximate guide for a 7–9 year old (based on ICMR-NIN 2020). Seasons and weather are for North India (Delhi region). This is not medical advice. Your plan and changes are saved in this browser only.',
+    today: 'Today', newPlan: '🔀 New plan', reset: '↺ Reset edits', print: '🖨️ Print',
+    language: 'Language', diet: 'Diet', veg: '🥛 Vegetarian', vegan: '🌱 Vegan', theme: 'Theme',
+    treatDay: 'Treat day', noTreat: 'No treat day', schoolDays: 'School days', monFri: 'Mon – Fri', monSat: 'Mon – Sat',
+    colorBy: 'Colour calendar by', nothing: 'Nothing', extras: 'Daily extras (added to every day)',
+    healthyDay: 'Healthy day', treatLegend: '{d} treat day', tiffinLegend: '🎒 School tiffin ({r})', veganLegend: '🌱 Vegan',
+    tagHealthy: '✅ Healthy', tagTreat: '🎉 Treat',
+    kcalLine: '≈ {k} kcal · {p}g protein', ofGoal: '{n}% of goal',
+    heatLbl: '{n}:', heatGood: '■ 90%+', heatMid: '■ 60–89%', heatLow: '■ under 60%',
+    sHealthy: '✅ {n} healthy days', sTreat: '🎉 {n} treat days', sTiffin: '🎒 {n} tiffins', sCooked: '👩‍🍳 {a}/{b} cooked',
+    reportTitle: '📊 {m} nutrition report',
+    reportSub: 'Average of {n} healthy days (meals + daily extras) compared with the daily goal',
+    perDay: '{v} of {t} {u}/day',
+    progress: '👩‍🍳 Cooking progress: {a} of {b} days',
+    lowOn: 'Low on {n}:', greatMonth: '🌟 Great month! Every key nutrient reaches at least 90% of the goal on healthy days.',
+    veganTip: '🧬 Vegan tip:',
+    subTreat: 'Treat day 🎉', subSchool: 'School day 🎒', subHome: 'Home day 🏠', subVegan: ' · 🌱 Vegan',
+    markCooked: '☐ Mark cooked', cooked: '✅ Cooked',
+    bannerTreat: '🎉 Treat day! Enjoy the yummy food: keep portions small, drink water and have fruit too.',
+    bannerHealthy: '✅ Healthy day: dal, sprouts, {pr} for protein; seasonal vegetables and fruit for vitamins and fibre.',
+    prVeg: 'paneer and curd', prVegan: 'tofu and soya',
+    breakfast: 'Breakfast', tiffin: '🎒 School tiffin', lunch: 'Lunch', lunchHome: 'Lunch at home', dinner: 'Dinner', sweet: 'Sweet treat',
+    yourPick: '✎ your pick', tVegan: '🌱 Vegan', tVeg: '🥛 Veg', tTreat: '😋 Treat', tSeason: '🌿 Seasonal',
+    inSeason: '🌿 In season now', otherDishes: 'Other dishes',
+    swap: '🔀 Swap', boost: '💡 Options to boost {n} today', extrasIncl: '➕ Daily extras included',
+    extrasNone: 'None. Turn some on in the options at the top.',
+    dayTotal: '📊 Day total: all nutrients', tip: 'Tip:', dayGreat: '🌟 This day meets at least 90% of every key nutrient goal.',
+    saved: 'Saved ✔', swapped: 'Swapped to {d}', added: '{d} added', cookedT: 'Yum! Marked as cooked 👩‍🍳', unmarked: 'Unmarked',
+    newPlanT: 'New plan for {m} 🔀', resetT: 'Your edits for this month were cleared',
+    veganOn: '🌱 Vegan mode: no milk, curd, paneer or ghee', vegOn: '🥛 Vegetarian mode',
+    seasonVeg: '🥬 Vegetables in season', seasonFruit: '🍎 Fruits in season', seasonTip: '💡 Eating tips for this weather',
+    seasonNote: 'This month’s plan uses dishes that suit the season.',
+    cal: { kcal: 'kcal' }
+  },
+  hi: {
+    appName: 'खाना प्लानर',
+    tagline: 'साल के हर दिन के लिए भारतीय शाकाहारी और वीगन खाना · <b>निवृति राजपूत</b> द्वारा बनाया गया 👩‍🍳',
+    madeby: '💛 के साथ <b>निवृति राजपूत</b> द्वारा बनाया गया',
+    disclaimer: 'पोषण के आंकड़े एक बच्चे की थाली के अनुमान हैं, और रोज़ का लक्ष्य 7–9 साल के बच्चे के लिए मोटा अनुमान है (ICMR-NIN 2020 के आधार पर)। मौसम और सब्ज़ियां उत्तर भारत (दिल्ली क्षेत्र) के हिसाब से हैं। यह डॉक्टरी सलाह नहीं है। आपका प्लान सिर्फ़ इसी ब्राउज़र में सेव होता है।',
+    today: 'आज', newPlan: '🔀 नया प्लान', reset: '↺ बदलाव हटाएं', print: '🖨️ प्रिंट',
+    language: 'भाषा', diet: 'आहार', veg: '🥛 शाकाहारी', vegan: '🌱 वीगन', theme: 'थीम',
+    treatDay: 'मज़े का दिन', noTreat: 'कोई मज़े का दिन नहीं', schoolDays: 'स्कूल के दिन', monFri: 'सोम – शुक्र', monSat: 'सोम – शनि',
+    colorBy: 'कैलेंडर में रंग दिखाएं', nothing: 'कुछ नहीं', extras: 'रोज़ के अतिरिक्त (हर दिन जुड़ेंगे)',
+    healthyDay: 'सेहतमंद दिन', treatLegend: '{d} – मज़े का दिन', tiffinLegend: '🎒 स्कूल टिफ़िन ({r})', veganLegend: '🌱 वीगन',
+    tagHealthy: '✅ सेहतमंद', tagTreat: '🎉 मज़ा',
+    kcalLine: '≈ {k} कैलोरी · {p} ग्रा. प्रोटीन', ofGoal: 'लक्ष्य का {n}%',
+    heatLbl: '{n}:', heatGood: '■ 90%+', heatMid: '■ 60–89%', heatLow: '■ 60% से कम',
+    sHealthy: '✅ {n} सेहतमंद दिन', sTreat: '🎉 {n} मज़े के दिन', sTiffin: '🎒 {n} टिफ़िन', sCooked: '👩‍🍳 {a}/{b} बन गए',
+    reportTitle: '📊 {m} की पोषण रिपोर्ट',
+    reportSub: '{n} सेहतमंद दिनों का औसत (खाना + रोज़ के अतिरिक्त), रोज़ के लक्ष्य की तुलना में',
+    perDay: '{v} / {t} {u} प्रतिदिन',
+    progress: '👩‍🍳 खाना बनाने की प्रगति: {b} में से {a} दिन',
+    lowOn: '{n} कम है:', greatMonth: '🌟 बढ़िया महीना! सेहतमंद दिनों में हर ज़रूरी पोषक तत्व लक्ष्य के 90% से ज़्यादा है।',
+    veganTip: '🧬 वीगन सलाह:',
+    subTreat: 'मज़े का दिन 🎉', subSchool: 'स्कूल का दिन 🎒', subHome: 'घर का दिन 🏠', subVegan: ' · 🌱 वीगन',
+    markCooked: '☐ बन गया?', cooked: '✅ बन गया',
+    bannerTreat: '🎉 मज़े का दिन! स्वादिष्ट खाना खाएं, पर थोड़ा-थोड़ा। पानी पिएं और फल भी खाएं।',
+    bannerHealthy: '✅ सेहतमंद दिन: प्रोटीन के लिए दाल, अंकुरित अनाज, {pr}; विटामिन और फ़ाइबर के लिए मौसमी सब्ज़ियां और फल।',
+    prVeg: 'पनीर और दही', prVegan: 'टोफू और सोया',
+    breakfast: 'नाश्ता', tiffin: '🎒 स्कूल टिफ़िन', lunch: 'दोपहर का खाना', lunchHome: 'घर पर दोपहर का खाना', dinner: 'रात का खाना', sweet: 'मीठा',
+    yourPick: '✎ आपकी पसंद', tVegan: '🌱 वीगन', tVeg: '🥛 शाकाहारी', tTreat: '😋 मज़ा', tSeason: '🌿 मौसमी',
+    inSeason: '🌿 अभी मौसम में', otherDishes: 'बाकी व्यंजन',
+    swap: '🔀 बदलें', boost: '💡 आज {n} बढ़ाने के विकल्प', extrasIncl: '➕ रोज़ के अतिरिक्त',
+    extrasNone: 'कोई नहीं। ऊपर विकल्पों में चुनें।',
+    dayTotal: '📊 दिन का कुल पोषण', tip: 'सलाह:', dayGreat: '🌟 इस दिन हर ज़रूरी पोषक तत्व लक्ष्य के 90% से ज़्यादा है।',
+    saved: 'सेव हो गया ✔', swapped: '{d} चुना गया', added: '{d} जोड़ा गया', cookedT: 'वाह! बन गया 👩‍🍳', unmarked: 'हटा दिया',
+    newPlanT: '{m} का नया प्लान 🔀', resetT: 'इस महीने के बदलाव हटा दिए',
+    veganOn: '🌱 वीगन मोड: दूध, दही, पनीर, घी नहीं', vegOn: '🥛 शाकाहारी मोड',
+    seasonVeg: '🥬 मौसमी सब्ज़ियां', seasonFruit: '🍎 मौसमी फल', seasonTip: '💡 इस मौसम में खाने की सलाह',
+    seasonNote: 'इस महीने का प्लान मौसम के हिसाब से बना है।',
+    cal: { kcal: 'कैलोरी' }
+  }
+};
+const MONTHS = {
+  en: ['January','February','March','April','May','June','July','August','September','October','November','December'],
+  hi: ['जनवरी','फ़रवरी','मार्च','अप्रैल','मई','जून','जुलाई','अगस्त','सितंबर','अक्टूबर','नवंबर','दिसंबर']
+};
+const WD = {
+  en: ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'],
+  hi: ['रविवार','सोमवार','मंगलवार','बुधवार','गुरुवार','शुक्रवार','शनिवार']
+};
+const WD_SHORT = { en: ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'], hi: ['रवि','सोम','मंगल','बुध','गुरु','शुक्र','शनि'] };
+const THEMES = { masala: ['🌶️ Masala', '🌶️ मसाला'], gulabi: ['🌸 Gulabi (pink)', '🌸 गुलाबी'], pudina: ['🌿 Pudina (mint)', '🌿 पुदीना'], raat: ['🌙 Raat (dark)', '🌙 रात'] };
+
+/* =========================================================
+   Nutrients and an approximate daily goal for a 7–9 year old
+   ========================================================= */
+const NUT = {
+  kcal: { en: 'Energy',      hi: 'ऊर्जा',          u: 'kcal', t: 1690, i: '🔥' },
+  p:    { en: 'Protein',     hi: 'प्रोटीन',        u: 'g',    t: 30,   i: '💪' },
+  c:    { en: 'Carbs',       hi: 'कार्बोहाइड्रेट', u: 'g',    t: 220,  i: '🌾' },
+  f:    { en: 'Fat',         hi: 'वसा',            u: 'g',    t: 50,   i: '🥑' },
+  fb:   { en: 'Fibre',       hi: 'फ़ाइबर',          u: 'g',    t: 25,   i: '🥦' },
+  fe:   { en: 'Iron',        hi: 'आयरन',           u: 'mg',   t: 15,   i: '🩸' },
+  ca:   { en: 'Calcium',     hi: 'कैल्शियम',        u: 'mg',   t: 650,  i: '🦴' },
+  vc:   { en: 'Vitamin C',   hi: 'विटामिन C',       u: 'mg',   t: 45,   i: '🍊' },
+  va:   { en: 'Vitamin A',   hi: 'विटामिन A',       u: 'µg',   t: 600,  i: '🥕' },
+  zn:   { en: 'Zinc',        hi: 'ज़िंक',           u: 'mg',   t: 8.5,  i: '⚡' },
+  b12:  { en: 'Vitamin B12', hi: 'विटामिन B12',     u: 'µg',   t: 2.2,  i: '🧬' }
+};
+const KEYS = Object.keys(NUT);
+const BOOST = ['p', 'fb', 'fe', 'ca', 'vc', 'va', 'zn', 'b12'];
+const FOOD_TIPS = {
+  en: {
+    kcal: 'Add an energy snack: banana, peanut chikki, poha or a handful of nuts.',
+    p: 'Protein: dal, rajma, chana, sprouts, soya chunks, peanuts, paneer or tofu.',
+    c: 'Carbs: roti, rice, poha, millets like ragi and bajra.',
+    f: 'Healthy fats: peanuts, til (sesame), almonds, a little cold-pressed oil.',
+    fb: 'Fibre: whole wheat roti, sprouts, rajma, fruit with the skin, salad.',
+    fe: 'Iron: ragi, palak, bajra, rajma, poha, gur, til. Squeeze lemon on dal and sprouts: vitamin C helps the body absorb iron.',
+    ca: 'Calcium: ragi, til, rajma, tofu. Vegetarians: milk, curd, paneer. Vegans: calcium-set tofu and fortified soy milk.',
+    vc: 'Vitamin C: amla, guava, orange, lemon, tomato, capsicum.',
+    va: 'Vitamin A: carrot, pumpkin, papaya, mango, palak, sweet potato.',
+    zn: 'Zinc: pumpkin seeds, cashews, chana, rajma, whole grains.',
+    b12: 'Vitamin B12 comes almost only from milk, curd and paneer. A vegan child needs B12-fortified soy milk or a supplement: please ask your doctor.'
+  },
+  hi: {
+    kcal: 'ऊर्जा के लिए नाश्ता जोड़ें: केला, मूंगफली चिक्की, पोहा या मुट्ठी भर मेवे।',
+    p: 'प्रोटीन: दाल, राजमा, चना, अंकुरित अनाज, सोया चंक, मूंगफली, पनीर या टोफू।',
+    c: 'कार्बोहाइड्रेट: रोटी, चावल, पोहा, रागी-बाजरा जैसे मोटे अनाज।',
+    f: 'अच्छी वसा: मूंगफली, तिल, बादाम, थोड़ा कच्ची घानी तेल।',
+    fb: 'फ़ाइबर: गेहूं की रोटी, अंकुरित अनाज, राजमा, छिलके वाले फल, सलाद।',
+    fe: 'आयरन: रागी, पालक, बाजरा, राजमा, पोहा, गुड़, तिल। दाल और स्प्राउट्स पर नींबू निचोड़ें: विटामिन C आयरन सोखने में मदद करता है।',
+    ca: 'कैल्शियम: रागी, तिल, राजमा, टोफू। शाकाहारी: दूध, दही, पनीर। वीगन: टोफू और फ़ोर्टिफ़ाइड सोया दूध।',
+    vc: 'विटामिन C: आंवला, अमरूद, संतरा, नींबू, टमाटर, शिमला मिर्च।',
+    va: 'विटामिन A: गाजर, कद्दू, पपीता, आम, पालक, शकरकंद।',
+    zn: 'ज़िंक: कद्दू के बीज, काजू, चना, राजमा, साबुत अनाज।',
+    b12: 'विटामिन B12 लगभग सिर्फ़ दूध, दही और पनीर से मिलता है। वीगन बच्चे को B12 वाला सोया दूध या सप्लीमेंट चाहिए: डॉक्टर से पूछें।'
+  }
 };
 
-/* Rough daily guide for a 7–10 year old child */
-const TARGET = { kcal: 1700, p: 34, c: 230, f: 50, fb: 25 };
-const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
-const WD = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+/* =========================================================
+   North Indian seasons (Delhi region)
+   W winter Dec–Feb · S spring Mar · U summer Apr–Jun · M monsoon Jul–Sep · A autumn Oct–Nov
+   ========================================================= */
+const SEASON_OF_MONTH = 'WWSUUUMMMAAW';
+const SEASONS = {
+  W: { icon: '❄️', en: 'Winter (Sardi) · Dec – Feb', hi: 'सर्दी · दिसंबर – फ़रवरी',
+       wx: { en: 'Cold with foggy mornings · about 5–22°C', hi: 'ठंड और कोहरे वाली सुबह · लगभग 5–22°C' },
+       veg: 'Sarson|सरसों,Palak|पालक,Bathua|बथुआ,Methi|मेथी,Gajar|गाजर,Matar|मटर,Gobhi|गोभी,Mooli|मूली,Shakarkandi|शकरकंद,Shalgam|शलजम',
+       fruit: 'Kinnow|किन्नू,Orange|संतरा,Amrood|अमरूद,Amla|आंवला,Apple|सेब,Chikoo|चीकू',
+       fruitName: { en: 'Seasonal fruit (kinnow / amrood)', hi: 'मौसमी फल (किन्नू / अमरूद)' },
+       tip: { en: 'Warm, filling food: bajra and makki roti, til and gur, hot soups, ginger tea. Green saag is at its best now. Amla and amrood give lots of vitamin C to fight colds.',
+              hi: 'गरम और भरपेट खाना: बाजरे और मक्की की रोटी, तिल-गुड़, गरम सूप, अदरक वाली चाय। हरा साग अभी सबसे अच्छा है। आंवला और अमरूद से सर्दी-ज़ुकाम से लड़ने के लिए विटामिन C मिलता है।' } },
+  S: { icon: '🌼', en: 'Spring (Basant) · March', hi: 'बसंत · मार्च',
+       wx: { en: 'Pleasant and getting warmer · about 15–30°C', hi: 'सुहावना, धीरे-धीरे गर्मी · लगभग 15–30°C' },
+       veg: 'Matar|मटर,Gajar|गाजर,Palak|पालक,Beans|बीन्स,Patta Gobhi|पत्ता गोभी,Phool Gobhi|फूल गोभी,Methi|मेथी',
+       fruit: 'Kinnow|किन्नू,Strawberry|स्ट्रॉबेरी,Papaya|पपीता,Banana|केला,Grapes|अंगूर',
+       fruitName: { en: 'Seasonal fruit (strawberry / papaya)', hi: 'मौसमी फल (स्ट्रॉबेरी / पपीता)' },
+       tip: { en: 'Enjoy the last of the winter greens and peas. Start drinking more water as the days get warmer. Holi treats: keep portions small.',
+              hi: 'सर्दियों का आखिरी साग और मटर खाएं। दिन गरम हो रहे हैं, पानी ज़्यादा पिएं। होली की मिठाई: थोड़ी-थोड़ी।' } },
+  U: { icon: '☀️', en: 'Summer (Garmi) · Apr – Jun', hi: 'गर्मी · अप्रैल – जून',
+       wx: { en: 'Very hot and dry with loo winds · about 35–45°C', hi: 'बहुत गर्म और सूखी लू · लगभग 35–45°C' },
+       veg: 'Lauki|लौकी,Tori|तोरी,Tinda|टिंडा,Karela|करेला,Bhindi|भिंडी,Kakdi|ककड़ी,Kaddu|कद्दू,Parwal|परवल',
+       fruit: 'Mango|आम,Watermelon|तरबूज़,Kharbooja|खरबूज़ा,Litchi|लीची,Falsa|फालसा,Jamun|जामुन',
+       fruitName: { en: 'Seasonal fruit (mango / watermelon)', hi: 'मौसमी फल (आम / तरबूज़)' },
+       tip: { en: 'Light, cooling meals and lots of fluids: nimbu pani, aam panna, sattu drink, chaas (or coconut water for vegans). Avoid heavy fried food in the afternoon heat. Pack tiffins that don’t spoil.',
+              hi: 'हल्का, ठंडक देने वाला खाना और खूब पानी: नींबू पानी, आम पन्ना, सत्तू, छाछ (वीगन के लिए नारियल पानी)। दोपहर की गर्मी में तला खाना कम करें। टिफ़िन ऐसा रखें जो खराब न हो।' } },
+  M: { icon: '🌧️', en: 'Monsoon (Barsaat) · Jul – Sep', hi: 'बरसात · जुलाई – सितंबर',
+       wx: { en: 'Hot and humid with rain · about 27–35°C', hi: 'उमस भरी गर्मी और बारिश · लगभग 27–35°C' },
+       veg: 'Lauki|लौकी,Tori|तोरी,Bhindi|भिंडी,Arbi|अरबी,Karela|करेला,Bhutta|भुट्टा,Parwal|परवल,Kaddu|कद्दू',
+       fruit: 'Jamun|जामुन,Nashpati|नाशपाती,Aloo Bukhara|आलूबुखारा,Anaar|अनार,Banana|केला,Aadu|आड़ू',
+       fruitName: { en: 'Seasonal fruit (jamun / pear)', hi: 'मौसमी फल (जामुन / नाशपाती)' },
+       tip: { en: 'Eat freshly cooked, warm food. Boil drinking water and wash vegetables well. Go easy on raw leafy greens and street food. Ginger-tulsi tea and roasted bhutta are perfect for rainy days.',
+              hi: 'ताज़ा पका, गरम खाना खाएं। पीने का पानी उबालें और सब्ज़ियां अच्छे से धोएं। कच्चे पत्तेदार साग और बाहर का खाना कम करें। अदरक-तुलसी चाय और भुना भुट्टा बारिश के लिए बढ़िया हैं।' } },
+  A: { icon: '🍂', en: 'Autumn (Sharad) · Oct – Nov', hi: 'शरद · अक्टूबर – नवंबर',
+       wx: { en: 'Pleasant days, cool nights, festival season · about 12–32°C', hi: 'सुहावने दिन, ठंडी रातें, त्योहारों का मौसम · लगभग 12–32°C' },
+       veg: 'Gobhi|गोभी,Shakarkandi|शकरकंद,Singhara|सिंघाड़ा,Palak|पालक,Methi|मेथी,Mooli|मूली,Matar (Nov)|मटर (नवंबर)',
+       fruit: 'Apple|सेब,Anaar|अनार,Amrood|अमरूद,Sitaphal|सीताफल,Nashpati|नाशपाती,Orange|संतरा',
+       fruitName: { en: 'Seasonal fruit (apple / guava)', hi: 'मौसमी फल (सेब / अमरूद)' },
+       tip: { en: 'Festival sweets are everywhere, so keep portions small. Shakarkandi chaat and boiled singhara make great snacks. It’s smog season, so have amla, guava and oranges for vitamin C.',
+              hi: 'त्योहारों में मिठाई बहुत होती है: थोड़ी-थोड़ी खाएं। शकरकंद चाट और उबले सिंघाड़े अच्छे नाश्ते हैं। स्मॉग का मौसम है: विटामिन C के लिए आंवला, अमरूद और संतरा खाएं।' } }
+};
+
+/* =========================================================
+   Dish library
+   [English, Hindi, emoji, vegan(1/0), seasons ('*' = all year, else letters W S U M A),
+    kcal, protein g, carbs g, fat g, fibre g, iron mg, calcium mg, vit C mg, vit A µg, zinc mg, B12 µg]
+   Approximate values for one child-sized serving.
+   ========================================================= */
+const RAW = {
+  breakfast: [
+    ['Vegetable Poha', 'वेज पोहा', '🍚', 1, '*', 250, 6, 42, 7, 3, 4.0, 25, 12, 60, 1.0, 0],
+    ['Moong Dal Chilla', 'मूंग दाल चीला', '🥞', 1, '*', 230, 13, 28, 7, 5, 2.5, 40, 5, 40, 1.4, 0],
+    ['Vegetable Upma', 'वेज उपमा', '🥣', 1, '*', 220, 6, 35, 7, 4, 1.5, 30, 8, 80, 0.9, 0],
+    ['Idli Sambar', 'इडली सांभर', '⚪', 1, '*', 260, 10, 48, 3, 5, 2.2, 60, 8, 60, 1.3, 0],
+    ['Ragi Dosa & Chutney', 'रागी डोसा और चटनी', '🫓', 1, '*', 240, 7, 40, 6, 5, 2.0, 200, 3, 20, 1.2, 0],
+    ['Oats Veg Uttapam', 'ओट्स वेज उत्तपम', '🥞', 1, '*', 250, 9, 38, 7, 6, 2.2, 40, 10, 90, 1.6, 0],
+    ['Besan Chilla with Paneer', 'पनीर बेसन चीला', '🧀', 0, '*', 280, 15, 24, 13, 5, 2.4, 180, 6, 60, 1.8, 0.2],
+    ['Besan Tofu Chilla', 'टोफू बेसन चीला', '🥞', 1, '*', 260, 15, 24, 11, 5, 3.0, 200, 6, 60, 1.8, 0],
+    ['Daliya with Milk & Nuts', 'दूध और मेवे वाला दलिया', '🥣', 0, '*', 260, 10, 40, 7, 6, 1.8, 180, 1, 40, 1.5, 0.6],
+    ['Daliya with Soy Milk & Nuts', 'सोया दूध और मेवे वाला दलिया', '🥣', 1, '*', 250, 10, 40, 7, 6, 2.0, 170, 1, 30, 1.5, 0.5],
+    ['Paneer Paratha & Curd', 'पनीर पराठा और दही', '🫓', 0, '*', 340, 15, 38, 14, 5, 1.8, 260, 3, 80, 1.6, 0.5],
+    ['Sprouts Chaat & Milk', 'स्प्राउट्स चाट और दूध', '🌱', 0, '*', 260, 15, 32, 7, 7, 2.8, 200, 15, 60, 1.6, 0.6],
+    ['Sprouts Chaat & Soy Milk', 'स्प्राउट्स चाट और सोया दूध', '🌱', 1, '*', 250, 15, 32, 7, 7, 3.0, 180, 15, 50, 1.6, 0.5],
+    ['Vegetable Sevai', 'वेज सेवइयां', '🍝', 1, '*', 230, 6, 40, 5, 3, 1.2, 20, 8, 90, 0.7, 0],
+    ['Methi Thepla & Curd', 'मेथी थेपला और दही', '🫓', 0, 'WSA', 300, 10, 40, 11, 5, 3.2, 150, 6, 150, 1.2, 0.3],
+    ['Pesarattu (Green Moong Dosa)', 'पेसरट्टू (हरी मूंग डोसा)', '🥞', 1, '*', 230, 12, 30, 6, 5, 2.6, 50, 8, 50, 1.4, 0],
+    ['Rava Idli & Coconut Chutney', 'रवा इडली और नारियल चटनी', '⚪', 0, '*', 230, 7, 38, 5, 3, 1.0, 60, 2, 20, 0.7, 0.2],
+    ['Banana Ragi Porridge', 'केला रागी दलिया', '🍌', 0, '*', 230, 7, 42, 4, 5, 2.0, 280, 5, 40, 1.0, 0.4],
+    ['Palak Paratha & Peanut Chutney', 'पालक पराठा और मूंगफली चटनी', '🥬', 1, 'WSA', 290, 9, 40, 11, 6, 3.0, 90, 12, 280, 1.3, 0],
+    ['Bathua Paratha & Curd', 'बथुआ पराठा और दही', '🌿', 0, 'W', 300, 10, 40, 11, 6, 3.5, 180, 20, 300, 1.3, 0.3],
+    ['Sattu Paratha & Mint Chutney', 'सत्तू पराठा और पुदीना चटनी', '🫓', 1, 'UM', 300, 13, 42, 9, 7, 3.0, 60, 8, 20, 1.6, 0],
+    ['Mango Oats Smoothie Bowl', 'आम ओट्स स्मूदी बाउल', '🥭', 1, 'U', 240, 8, 42, 5, 5, 1.8, 200, 30, 200, 1.2, 0.5]
+  ],
+  tiffin: [
+    ['Paneer Kathi Roll', 'पनीर काठी रोल', '🌯', 0, '*', 330, 15, 36, 14, 5, 1.8, 220, 10, 60, 1.6, 0.3],
+    ['Tofu Kathi Roll', 'टोफू काठी रोल', '🌯', 1, '*', 310, 15, 36, 12, 5, 2.8, 220, 10, 60, 1.6, 0],
+    ['Veg Pulao & Raita', 'वेज पुलाव और रायता', '🍚', 0, '*', 320, 8, 50, 9, 4, 1.6, 120, 10, 150, 1.2, 0.2],
+    ['Veg Pulao & Peanut Salad', 'वेज पुलाव और मूंगफली सलाद', '🍚', 1, '*', 330, 10, 50, 10, 5, 1.8, 40, 12, 150, 1.4, 0],
+    ['Mini Idli & Chutney', 'मिनी इडली और चटनी', '⚪', 1, '*', 250, 8, 44, 4, 4, 1.6, 40, 3, 10, 1.0, 0],
+    ['Aloo-Matar Paratha (light oil)', 'आलू-मटर पराठा (कम तेल)', '🫓', 1, 'WSA', 310, 8, 44, 11, 6, 2.0, 40, 14, 30, 1.1, 0],
+    ['Brown Bread Veg Sandwich', 'ब्राउन ब्रेड वेज सैंडविच', '🥪', 1, '*', 260, 9, 38, 8, 6, 2.2, 60, 12, 100, 1.2, 0],
+    ['Lemon Rice with Peanuts', 'नींबू चावल और मूंगफली', '🍋', 1, '*', 300, 7, 48, 9, 3, 1.4, 20, 15, 10, 1.1, 0],
+    ['Corn & Paneer Wrap', 'कॉर्न पनीर रैप', '🌽', 0, '*', 310, 14, 36, 12, 5, 1.6, 200, 6, 50, 1.5, 0.3],
+    ['Veg Uttapam Bites', 'वेज उत्तपम बाइट्स', '🥞', 1, '*', 260, 8, 40, 7, 5, 1.6, 40, 12, 120, 1.0, 0],
+    ['Curd Rice & Pomegranate', 'दही चावल और अनार', '🍚', 0, '*', 270, 8, 44, 6, 2, 0.6, 180, 6, 30, 0.9, 0.4],
+    ['Palak Paratha Rolls', 'पालक पराठा रोल', '🥬', 1, 'WSA', 300, 10, 40, 11, 6, 3.0, 90, 12, 280, 1.3, 0],
+    ['Besan Chilla Roll', 'बेसन चीला रोल', '🌯', 1, '*', 270, 13, 26, 12, 5, 2.6, 40, 8, 60, 1.6, 0],
+    ['Atta Veg Noodles', 'आटा वेज नूडल्स', '🍜', 1, '*', 300, 8, 46, 9, 5, 2.0, 30, 15, 150, 1.2, 0],
+    ['Paneer Bhurji Roti Roll', 'पनीर भुर्जी रोटी रोल', '🧀', 0, '*', 320, 16, 30, 15, 4, 1.6, 240, 8, 70, 1.6, 0.4],
+    ['Sprouts Tikki & Mint Dip', 'स्प्राउट्स टिक्की और पुदीना डिप', '🌱', 1, '*', 260, 12, 32, 9, 7, 2.8, 50, 12, 40, 1.4, 0],
+    ['Moong Dal Dhokla', 'मूंग दाल ढोकला', '🟨', 1, '*', 240, 12, 34, 5, 5, 2.2, 40, 4, 30, 1.2, 0],
+    ['Chana Hummus Wrap', 'छोले हम्मस रैप', '🫓', 1, '*', 300, 12, 40, 10, 7, 2.8, 80, 8, 40, 1.6, 0],
+    ['Gobhi Paratha & Curd', 'गोभी पराठा और दही', '🫓', 0, 'WA', 310, 9, 42, 11, 6, 2.0, 160, 30, 30, 1.2, 0.3],
+    ['Methi Thepla Rolls', 'मेथी थेपला रोल', '🌿', 1, 'WS', 290, 9, 40, 10, 6, 3.2, 90, 6, 150, 1.2, 0],
+    ['Lauki Thepla & Chutney', 'लौकी थेपला और चटनी', '🫓', 1, 'UM', 280, 8, 40, 10, 5, 2.0, 60, 6, 20, 1.1, 0]
+  ],
+  homeLunch: [
+    ['Rajma Chawal & Salad', 'राजमा चावल और सलाद', '🫘', 1, '*', 430, 16, 70, 8, 12, 4.0, 80, 10, 40, 2.0, 0],
+    ['Dal, Roti & Bhindi', 'दाल, रोटी और भिंडी', '🍛', 1, 'UMA', 420, 16, 60, 12, 11, 3.4, 110, 14, 60, 2.0, 0],
+    ['Kadhi Chawal & Salad', 'कढ़ी चावल और सलाद', '🍛', 0, '*', 400, 12, 62, 11, 4, 1.5, 200, 8, 50, 1.4, 0.4],
+    ['Chole, Roti & Kachumber', 'छोले, रोटी और कचूमर', '🫘', 1, '*', 440, 17, 62, 12, 13, 4.2, 100, 12, 50, 2.2, 0],
+    ['Sambar Rice & Beans Poriyal', 'सांभर चावल और बीन्स पोरियल', '🍲', 1, '*', 400, 13, 66, 8, 10, 2.8, 80, 14, 120, 1.6, 0],
+    ['Lobia Curry & Jeera Rice', 'लोबिया करी और जीरा चावल', '🫘', 1, '*', 410, 16, 66, 8, 12, 3.6, 70, 6, 30, 2.0, 0],
+    ['Palak Paneer, Roti & Salad', 'पालक पनीर, रोटी और सलाद', '🥬', 0, 'WSA', 440, 20, 42, 20, 8, 3.5, 300, 20, 400, 2.0, 0.4],
+    ['Soya Pulao & Cucumber Salad', 'सोया पुलाव और खीरा सलाद', '🍚', 1, '*', 420, 22, 60, 9, 8, 4.0, 120, 8, 60, 2.0, 0],
+    ['Sarson ka Saag & Makki Roti', 'सरसों का साग और मक्की की रोटी', '🌿', 0, 'W', 450, 13, 55, 20, 10, 4.5, 250, 40, 500, 1.8, 0.1],
+    ['Lauki Chana Dal, Rice & Kakdi Raita', 'लौकी चना दाल, चावल और ककड़ी रायता', '🍛', 0, 'UM', 400, 15, 62, 8, 9, 2.6, 150, 10, 40, 1.7, 0.3],
+    ['Kaddu Sabzi, Dal & Roti', 'कद्दू की सब्ज़ी, दाल और रोटी', '🎃', 1, 'UMA', 390, 15, 60, 9, 11, 3.0, 80, 10, 450, 1.8, 0],
+    ['Arbi Masala, Dal & Roti', 'अरबी मसाला, दाल और रोटी', '🥔', 1, 'M', 410, 14, 64, 10, 10, 2.8, 80, 6, 20, 1.6, 0]
+  ],
+  dinner: [
+    ['Dal Tadka, Roti & Lauki', 'दाल तड़का, रोटी और लौकी', '🍛', 1, 'UMA', 400, 16, 60, 10, 10, 3.2, 80, 10, 40, 1.8, 0],
+    ['Palak Paneer & Roti', 'पालक पनीर और रोटी', '🥬', 0, 'WSA', 430, 20, 40, 20, 8, 3.5, 300, 20, 400, 2.0, 0.4],
+    ['Palak Tofu & Roti', 'पालक टोफू और रोटी', '🥬', 1, 'WSA', 410, 20, 40, 17, 8, 4.5, 320, 20, 400, 2.0, 0],
+    ['Moong Dal Khichdi & Curd', 'मूंग दाल खिचड़ी और दही', '🍚', 0, '*', 380, 15, 62, 8, 7, 2.4, 160, 4, 40, 1.8, 0.4],
+    ['Moong Dal Khichdi & Salad', 'मूंग दाल खिचड़ी और सलाद', '🍚', 1, '*', 370, 15, 62, 7, 8, 2.6, 60, 10, 60, 1.8, 0],
+    ['Rajma & Brown Rice', 'राजमा और ब्राउन राइस', '🫘', 1, '*', 430, 17, 70, 7, 13, 4.2, 90, 6, 20, 2.2, 0],
+    ['Mix Veg, Dal & Roti', 'मिक्स वेज, दाल और रोटी', '🥕', 1, '*', 410, 15, 60, 11, 11, 3.2, 90, 18, 300, 1.8, 0],
+    ['Matar Paneer & Roti', 'मटर पनीर और रोटी', '🧀', 0, 'WSA', 440, 19, 44, 20, 8, 2.4, 260, 14, 70, 1.9, 0.4],
+    ['Sambar, Rice & Cabbage Poriyal', 'सांभर, चावल और पत्ता गोभी पोरियल', '🍲', 1, '*', 400, 13, 66, 8, 10, 2.6, 80, 25, 90, 1.5, 0],
+    ['Aloo Gobhi, Dal & Roti', 'आलू गोभी, दाल और रोटी', '🥦', 1, 'WSA', 410, 14, 62, 11, 10, 2.8, 70, 35, 30, 1.6, 0],
+    ['Masoor Dal, Jeera Rice & Salad', 'मसूर दाल, जीरा चावल और सलाद', '🍛', 1, '*', 400, 17, 64, 7, 9, 3.6, 60, 10, 50, 2.0, 0],
+    ['Baingan Bharta, Dal & Roti', 'बैंगन भर्ता, दाल और रोटी', '🍆', 1, 'WA', 400, 15, 58, 11, 11, 3.0, 80, 8, 40, 1.8, 0],
+    ['Soya Chunk Curry & Roti', 'सोया चंक करी और रोटी', '🥘', 1, '*', 420, 26, 50, 11, 10, 5.0, 180, 6, 40, 2.4, 0],
+    ['Paneer Tikka, Dal & Roti', 'पनीर टिक्का, दाल और रोटी', '🍢', 0, '*', 450, 24, 44, 18, 8, 2.8, 320, 10, 80, 2.2, 0.5],
+    ['Tori Sabzi, Moong Dal & Roti', 'तोरी की सब्ज़ी, मूंग दाल और रोटी', '🥒', 1, 'UM', 380, 15, 58, 9, 10, 2.6, 70, 12, 40, 1.7, 0],
+    ['Methi Dal, Rice & Salad', 'मेथी दाल, चावल और सलाद', '🌿', 1, 'WS', 390, 16, 62, 8, 10, 4.5, 120, 12, 200, 1.8, 0],
+    ['Chana Dal, Roti & Pumpkin Sabzi', 'चना दाल, रोटी और कद्दू की सब्ज़ी', '🎃', 1, '*', 410, 17, 60, 10, 12, 3.0, 80, 10, 450, 2.0, 0],
+    ['Veg Dalia Khichdi & Raita', 'वेज दलिया खिचड़ी और रायता', '🥣', 0, '*', 360, 13, 60, 7, 9, 2.2, 160, 10, 100, 1.6, 0.4],
+    ['Gajar Matar, Dal & Roti', 'गाजर मटर, दाल और रोटी', '🥕', 1, 'W', 400, 15, 60, 10, 11, 3.0, 80, 20, 600, 1.7, 0],
+    ['Tinda Masala, Dal & Roti', 'टिंडा मसाला, दाल और रोटी', '🟢', 1, 'UM', 380, 14, 58, 9, 10, 2.6, 70, 14, 20, 1.6, 0],
+    ['Bhindi Masala, Dal & Roti', 'भिंडी मसाला, दाल और रोटी', '🫛', 1, 'UM', 390, 14, 58, 11, 11, 2.8, 120, 15, 40, 1.7, 0],
+    ['Bajra Roti, Dal & Gur', 'बाजरे की रोटी, दाल और गुड़', '🌾', 1, 'W', 430, 16, 66, 10, 12, 5.0, 70, 4, 20, 2.4, 0]
+  ],
+  treatBreakfast: [
+    ['Aloo Puri', 'आलू पूरी', '🥔', 1, '*', 520, 10, 60, 26, 5, 2.2, 40, 12, 20, 1.0, 0],
+    ['Butter Aloo Paratha', 'मक्खन वाला आलू पराठा', '🧈', 0, '*', 480, 10, 56, 24, 5, 1.8, 60, 10, 120, 1.0, 0.1],
+    ['Kachori Sabzi', 'कचौड़ी सब्ज़ी', '🥟', 1, '*', 540, 11, 58, 29, 6, 2.6, 50, 8, 20, 1.2, 0],
+    ['Bread Pakora & Chai', 'ब्रेड पकौड़ा और चाय', '🍞', 0, '*', 470, 11, 52, 24, 4, 2.2, 120, 4, 40, 1.0, 0.3],
+    ['Butter Masala Dosa', 'मक्खन मसाला डोसा', '🌮', 0, '*', 450, 9, 62, 18, 5, 1.6, 40, 10, 100, 1.0, 0.1],
+    ['Sabudana Vada & Chutney', 'साबूदाना वड़ा और चटनी', '🟤', 1, '*', 460, 6, 58, 22, 3, 1.0, 30, 6, 10, 0.6, 0],
+    ['Masala Dosa', 'मसाला डोसा', '🌮', 1, '*', 430, 9, 62, 16, 5, 1.6, 40, 10, 20, 1.0, 0],
+    ['Puri Chana', 'पूरी छोले', '🫓', 1, '*', 530, 13, 62, 25, 7, 3.0, 60, 8, 20, 1.4, 0],
+    ['Mooli Paratha with Makhan', 'मूली पराठा और मक्खन', '🧈', 0, 'W', 470, 10, 56, 22, 6, 2.0, 80, 20, 30, 1.0, 0.1]
+  ],
+  treatLunch: [
+    ['Chole Bhature', 'छोले भटूरे', '🫓', 0, '*', 650, 17, 78, 30, 12, 4.0, 100, 10, 40, 2.0, 0.2],
+    ['Pav Bhaji (with butter)', 'पाव भाजी (मक्खन वाली)', '🍞', 0, '*', 580, 13, 76, 25, 9, 3.0, 80, 30, 200, 1.4, 0.1],
+    ['Pav Bhaji (oil, no butter)', 'पाव भाजी (बिना मक्खन)', '🍞', 1, '*', 560, 13, 76, 23, 9, 3.0, 70, 30, 200, 1.4, 0],
+    ['Dal Makhani & Butter Naan', 'दाल मखनी और बटर नान', '🧈', 0, '*', 640, 18, 70, 32, 11, 3.6, 200, 4, 120, 2.2, 0.4],
+    ['Veg Biryani & Raita', 'वेज बिरयानी और रायता', '🍚', 0, '*', 560, 13, 80, 20, 7, 2.2, 140, 10, 120, 1.4, 0.3],
+    ['Veg Biryani & Mirchi Salan', 'वेज बिरयानी और मिर्ची का सालन', '🍚', 1, '*', 570, 12, 80, 22, 8, 2.4, 60, 14, 100, 1.4, 0],
+    ['Paneer Butter Masala & Naan', 'पनीर बटर मसाला और नान', '🧀', 0, '*', 660, 21, 64, 35, 6, 2.0, 340, 10, 150, 2.0, 0.5],
+    ['Raj Kachori Chaat', 'राज कचौरी चाट', '🥗', 0, '*', 540, 14, 68, 24, 9, 2.8, 150, 12, 60, 1.6, 0.3],
+    ['Chole Kulche', 'छोले कुलचे', '🫘', 1, '*', 600, 17, 80, 22, 12, 4.0, 90, 10, 40, 2.0, 0],
+    ['Tofu Butter Masala & Roti', 'टोफू बटर मसाला और रोटी', '🍲', 1, '*', 600, 20, 60, 30, 6, 3.5, 300, 10, 150, 2.0, 0],
+    ['Masala Khichdi, Papad & Achaar', 'मसाला खिचड़ी, पापड़ और अचार', '🍚', 1, '*', 560, 15, 80, 20, 8, 2.8, 60, 8, 50, 1.8, 0]
+  ],
+  treatDinner: [
+    ['Paneer Tikka Pizza', 'पनीर टिक्का पिज़्ज़ा', '🍕', 0, '*', 600, 22, 66, 26, 5, 2.0, 380, 10, 150, 2.0, 0.6],
+    ['Veg Manchurian & Fried Rice', 'वेज मंचूरियन और फ्राइड राइस', '🥡', 1, '*', 590, 12, 80, 24, 6, 2.4, 60, 20, 150, 1.4, 0],
+    ['Malai Kofta & Laccha Paratha', 'मलाई कोफ्ता और लच्छा पराठा', '🍲', 0, '*', 650, 15, 66, 36, 6, 2.0, 200, 8, 120, 1.6, 0.4],
+    ['Aloo Tikki & Dahi Bhalla Chaat', 'आलू टिक्की और दही भल्ला चाट', '🥔', 0, '*', 520, 13, 68, 21, 7, 2.4, 160, 10, 30, 1.4, 0.3],
+    ['Shahi Paneer & Butter Naan', 'शाही पनीर और बटर नान', '🧀', 0, '*', 660, 21, 62, 36, 5, 1.8, 330, 8, 150, 2.0, 0.5],
+    ['Samosa & Pani Puri Party', 'समोसा और पानी पूरी पार्टी', '🥟', 1, '*', 560, 11, 70, 26, 7, 2.6, 50, 12, 20, 1.2, 0],
+    ['Hakka Noodles & Chilli Tofu', 'हक्का नूडल्स और चिली टोफू', '🍜', 1, '*', 580, 16, 74, 23, 6, 3.0, 200, 18, 120, 1.6, 0],
+    ['Aloo Tikki Chole Chaat', 'आलू टिक्की छोले चाट', '🥔', 1, '*', 520, 13, 70, 20, 9, 3.0, 60, 12, 30, 1.5, 0],
+    ['Veggie Tofu Pizza', 'वेजी टोफू पिज़्ज़ा', '🍕', 1, '*', 580, 18, 70, 22, 6, 2.6, 220, 14, 120, 1.8, 0],
+    ['Bhutta & Pakode Night', 'भुट्टा और पकौड़े', '🌽', 1, 'M', 520, 10, 66, 24, 7, 2.4, 60, 12, 60, 1.4, 0]
+  ],
+  sweet: [
+    ['Gulab Jamun', 'गुलाब जामुन', '🟤', 0, '*', 180, 3, 28, 7, 0, 0.4, 60, 0, 30, 0.3, 0.1],
+    ['Rasmalai', 'रसमलाई', '🍮', 0, '*', 190, 6, 24, 8, 0, 0.2, 180, 0, 50, 0.6, 0.4],
+    ['Kesar Kheer', 'केसर खीर', '🍚', 0, '*', 200, 6, 30, 7, 0, 0.3, 190, 1, 50, 0.6, 0.4],
+    ['Jalebi & Rabri', 'जलेबी और रबड़ी', '🌀', 0, 'WSMA', 240, 4, 36, 10, 0, 0.6, 120, 0, 40, 0.4, 0.2],
+    ['Malai Kulfi', 'मलाई कुल्फी', '🍡', 0, 'U', 180, 5, 20, 9, 0, 0.2, 160, 1, 60, 0.5, 0.3],
+    ['Gajar Halwa', 'गाजर का हलवा', '🥕', 0, 'W', 220, 4, 30, 10, 2, 0.6, 120, 4, 400, 0.4, 0.2],
+    ['Moong Dal Halwa', 'मूंग दाल हलवा', '🟡', 0, 'W', 250, 6, 28, 13, 2, 1.0, 60, 0, 40, 0.8, 0.1],
+    ['Coconut Milk Kheer', 'नारियल दूध की खीर', '🥥', 1, '*', 200, 3, 30, 8, 1, 0.8, 30, 1, 0, 0.5, 0],
+    ['Aamras', 'आमरस', '🥭', 1, 'U', 150, 1, 36, 0, 2, 0.3, 20, 40, 250, 0.1, 0],
+    ['Til-Gur Chikki', 'तिल-गुड़ चिक्की', '🍬', 1, 'W', 180, 5, 22, 9, 2, 2.5, 200, 0, 0, 1.2, 0],
+    ['Dates & Nut Ladoo', 'खजूर-मेवा लड्डू', '🟫', 1, '*', 190, 4, 26, 9, 3, 1.2, 50, 0, 5, 0.8, 0],
+    ['Plain Jalebi', 'सादी जलेबी', '🌀', 1, '*', 220, 2, 38, 8, 0, 0.6, 10, 0, 0, 0.2, 0],
+    ['Watermelon Mint Ice Pop', 'तरबूज़-पुदीना आइस पॉप', '🍉', 1, 'U', 80, 1, 18, 0, 1, 0.3, 10, 12, 40, 0.1, 0]
+  ]
+};
+/* Daily extras. "milk" becomes fortified soy milk in vegan mode; curd is vegetarian only; fruit follows the season. */
+const EXTRAS = {
+  milk:  { veg: ['Glass of milk', 'एक गिलास दूध', '🥛', 0, '*', 130, 6.4, 9.6, 7, 0, 0.2, 240, 2, 100, 0.8, 0.9],
+           vegan: ['Fortified soy milk', 'फ़ोर्टिफ़ाइड सोया दूध', '🥛', 1, '*', 90, 6.6, 6, 4, 1, 1.2, 240, 0, 100, 0.6, 0.8] },
+  fruit: { veg: ['Seasonal fruit', 'मौसमी फल', '🍎', 1, '*', 80, 1, 20, 0, 3, 0.4, 20, 40, 60, 0.2, 0] },
+  nuts:  { veg: ['Nuts & seeds', 'मेवे और बीज', '🥜', 1, '*', 160, 5, 6, 13, 3, 1.2, 60, 0, 0, 1.0, 0] },
+  snack: { veg: ['Roasted chana / makhana', 'भुने चने / मखाने', '🫘', 1, '*', 150, 7, 22, 3, 5, 2.0, 50, 0, 5, 1.2, 0] },
+  curd:  { veg: ['Bowl of curd', 'एक कटोरी दही', '🥣', 0, '*', 60, 3.5, 4.5, 3.5, 0, 0.1, 120, 1, 40, 0.5, 0.4] }
+};
+
+const mk = a => ({ en: a[0], hi: a[1], e: a[2], v: !!a[3], s: a[4], kcal: a[5], p: a[6], c: a[7], f: a[8], fb: a[9], fe: a[10], ca: a[11], vc: a[12], va: a[13], zn: a[14], b12: a[15] });
+const D = {}; Object.keys(RAW).forEach(k => D[k] = RAW[k].map(mk));
 
 /* ---------- safe storage ---------- */
 const store = {
   get(k, d) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch { return d; } },
   set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} }
 };
-let edits = store.get('kp-edits', {});   // { 'YYYY-MM-DD': { breakfast: idx, lunch: idx, ... } }
-let seeds = store.get('kp-seeds', {});   // { 'YYYY-MM': number }
+const S = Object.assign(
+  { lang: 'en', theme: 'masala', diet: 'veg', treat: 0, school: 'mf', colorBy: 'none',
+    extras: { milk: true, fruit: true, nuts: true, snack: false, curd: false } },
+  store.get('kp2-settings', {})
+);
+let edits = store.get('kp2-edits', {});   // { 'YYYY-MM-DD': { slot: englishDishName } }
+let seeds = store.get('kp2-seeds', {});   // { 'YYYY-MM': number }
+let cooked = store.get('kp2-cooked', {}); // { 'YYYY-MM-DD': true }
+const saveSettings = () => store.set('kp2-settings', S);
+
+/* ---------- small helpers ---------- */
+const tr = (k, vars = {}) => (T[S.lang][k] ?? T.en[k]).replace(/\{(\w+)\}/g, (_, v) => vars[v] ?? '');
+const L = o => o[S.lang] ?? o.en;                 // pick a field by language
+const nm = d => S.lang === 'hi' ? d.hi : d.en;    // dish name
+const nl = k => NUT[k][S.lang];                   // nutrient label
+const unit = k => k === 'kcal' ? T[S.lang].cal.kcal : NUT[k].u;
+const pad = n => String(n).padStart(2, '0');
+const keyOf = (y, m, d) => `${y}-${pad(m + 1)}-${pad(d)}`;
+const fmt = (v, k) => (k === 'b12' || k === 'zn' || k === 'fe') ? (Math.round(v * 10) / 10) : Math.round(v);
+const isSchool = wd => S.school === 'ms' ? (wd >= 1 && wd <= 6) : (wd >= 1 && wd <= 5);
+const seasonOf = m => SEASON_OF_MONTH[m];
+const inSeason = (d, s) => d.s === '*' || d.s.includes(s);
 
 /* ---------- seeded random ---------- */
 function rng(seed) {
@@ -364,168 +721,354 @@ function shuffled(n, r) {
   for (let i = n - 1; i > 0; i--) { const j = Math.floor(r() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; }
   return a;
 }
-/* Cycles through a list in a shuffled order so dishes don't repeat until all have been used */
-function cycler(list, r) {
-  let order = shuffled(list.length, r), i = 0, last = -1;
+/* Walks a list in shuffled order so no dish repeats until every dish has been used once */
+function cycler(n, r) {
+  let order = shuffled(n, r), i = 0, last = -1;
   return () => {
     if (i >= order.length) {
-      order = shuffled(list.length, r); i = 0;
-      if (order[0] === last && order.length > 1) [order[0], order[1]] = [order[1], order[0]];
+      order = shuffled(n, r); i = 0;
+      if (order[0] === last && n > 1) [order[0], order[1]] = [order[1], order[0]];
     }
     return (last = order[i++]);
   };
 }
 
-const pad = n => String(n).padStart(2, '0');
-const keyOf = (y, m, d) => `${y}-${pad(m + 1)}-${pad(d)}`;
-
-/* Which dish list fills each slot on a given weekday */
-function slotsFor(wd) {
-  if (wd === 0) return [
-    ['breakfast', 'Breakfast', 'sunBreakfast'],
-    ['lunch', 'Lunch', 'sunLunch'],
-    ['dinner', 'Dinner', 'sunDinner'],
-    ['sweet', 'Sweet treat', 'sweet']
-  ];
-  return [
-    ['breakfast', 'Breakfast', 'breakfast'],
-    wd === 6 ? ['lunch', 'Lunch at home', 'homeLunch'] : ['lunch', '🎒 School tiffin', 'tiffin'],
-    ['dinner', 'Dinner', 'dinner']
-  ];
+/* Dishes allowed by the chosen diet */
+const dietPool = list => D[list].filter(d => S.diet !== 'vegan' || d.v);
+/* Dishes allowed by diet AND in season; falls back to the diet pool if too few are in season */
+function seasonPool(list, season) {
+  const all = dietPool(list);
+  const fresh = all.filter(d => inSeason(d, season));
+  const need = list.startsWith('treat') || list === 'sweet' ? 3 : 5;
+  return fresh.length >= need ? fresh : all;
 }
 
-/* Build the whole month's plan (deterministic per month + seed), then apply user edits */
+function slotsFor(wd) {
+  const treat = wd === S.treat;
+  const lunch = isSchool(wd) ? ['lunch', 'tiffin', 'tiffin']
+              : treat ? ['lunch', 'lunch', 'treatLunch']
+              : ['lunch', 'lunchHome', 'homeLunch'];
+  const s = [
+    ['breakfast', 'breakfast', treat ? 'treatBreakfast' : 'breakfast'],
+    lunch,
+    ['dinner', 'dinner', treat ? 'treatDinner' : 'dinner']
+  ];
+  if (treat) s.push(['sweet', 'sweet', 'sweet']);
+  return s;
+}
+
+function activeExtras(season) {
+  return Object.keys(EXTRAS).filter(k => S.extras[k]).map(k => {
+    const x = EXTRAS[k];
+    const d = mk((S.diet === 'vegan' && x.vegan) ? x.vegan : x.veg);
+    if (k === 'fruit') { d.en = SEASONS[season].fruitName.en; d.hi = SEASONS[season].fruitName.hi; }
+    return d;
+  }).filter(d => S.diet !== 'vegan' || d.v);
+}
+
+/* Build a whole month (deterministic for month + options + seed), then apply the family's own picks */
 function buildMonth(y, m) {
-  const r = rng((y * 100 + m + 1) * 7919 + (seeds[`${y}-${pad(m + 1)}`] || 0));
-  const cyc = {};
-  Object.keys(D).forEach(k => cyc[k] = cycler(D[k], r));
+  const ym = `${y}-${pad(m + 1)}`;
+  const season = seasonOf(m);
+  const r = rng((y * 100 + m + 1) * 7919 + (seeds[ym] || 0) + (S.diet === 'vegan' ? 31337 : 0) + (S.treat + 1) * 101);
+  const cyc = {}, pools = {};
+  Object.keys(D).forEach(k => { pools[k] = seasonPool(k, season); cyc[k] = cycler(pools[k].length, r); });
   const days = new Date(y, m + 1, 0).getDate();
-  const plan = [];
+  const out = [];
   for (let d = 1; d <= days; d++) {
     const wd = new Date(y, m, d).getDay();
     const key = keyOf(y, m, d);
     const meals = slotsFor(wd).map(([slot, label, list]) => {
-      const auto = cyc[list]();
-      const ed = edits[key] && edits[key][slot];
-      const idx = ed != null && D[list][ed] ? ed : auto;
-      return { slot, label, list, idx, edited: ed != null && ed !== auto, dish: D[list][idx] };
+      const auto = pools[list][cyc[list]()];
+      const want = edits[key] && edits[key][slot];
+      const pick = want && dietPool(list).find(x => x.en === want);
+      const dish = pick || auto;
+      return { slot, label, list, dish, edited: !!pick && pick !== auto };
     });
-    plan.push({ d, wd, key, meals, sunday: wd === 0 });
+    out.push({ d, wd, key, meals, treat: wd === S.treat });
   }
-  return plan;
+  return out;
 }
 
-const sum = meals => meals.reduce((t, m) => {
-  const x = m.dish; t.kcal += x[2]; t.p += x[3]; t.c += x[4]; t.f += x[5]; t.fb += x[6]; return t;
-}, { kcal: 0, p: 0, c: 0, f: 0, fb: 0 });
+function totals(p) {
+  const t = {}; KEYS.forEach(k => t[k] = 0);
+  [...p.meals.map(m => m.dish), ...activeExtras(seasonOf(M))].forEach(x => KEYS.forEach(k => t[k] += x[k]));
+  return t;
+}
+const pct = (t, k) => t[k] / NUT[k].t;
+const level = r => r >= 0.9 ? 'good' : r >= 0.6 ? 'mid' : 'low';
 
-/* ---------- state + rendering ---------- */
+/* ---------- state ---------- */
 const now = new Date();
 let Y = now.getFullYear(), M = now.getMonth(), sel = now.getDate();
 let plan = [];
-
 const $ = id => document.getElementById(id);
-function setupSelects() {
-  $('monthSel').innerHTML = MONTHS.map((n, i) => `<option value="${i}">${n}</option>`).join('');
-  const ys = []; for (let y = now.getFullYear() - 1; y <= now.getFullYear() + 3; y++) ys.push(y);
-  $('yearSel').innerHTML = ys.map(y => `<option>${y}</option>`).join('');
+
+/* ---------- options ---------- */
+function setupOptions() {
+  $('langSeg').querySelectorAll('button').forEach(b => b.onclick = () => { S.lang = b.dataset.v; saveSettings(); render(); });
+  $('dietSeg').querySelectorAll('button').forEach(b => b.onclick = () => {
+    S.diet = b.dataset.v; saveSettings();
+    toast(tr(S.diet === 'vegan' ? 'veganOn' : 'vegOn'));
+    render();
+  });
+  $('themeSel').onchange = e => { S.theme = e.target.value; saveSettings(); render(); };
+  $('treatSel').onchange = e => { S.treat = +e.target.value; saveSettings(); render(); };
+  $('schoolSel').onchange = e => { S.school = e.target.value; saveSettings(); render(); };
+  $('colorSel').onchange = e => { S.colorBy = e.target.value; saveSettings(); render(); };
 }
 
-function render() {
+function renderChrome() {
+  const lang = S.lang;
+  document.documentElement.lang = lang;
+  document.documentElement.dataset.theme = S.theme;
+  document.title = tr('appName');
+  $('appName').textContent = tr('appName');
+  $('tagline').innerHTML = tr('tagline');
+  $('madeby').innerHTML = tr('madeby');
+  $('disclaimer').textContent = tr('disclaimer');
+  $('todayBtn').textContent = tr('today');
+  $('shuffle').textContent = tr('newPlan');
+  $('reset').textContent = tr('reset');
+  $('print').textContent = tr('print');
+  document.querySelectorAll('[data-t]').forEach(el => el.textContent = tr(el.dataset.t));
+
+  $('monthSel').innerHTML = MONTHS[lang].map((n, i) => `<option value="${i}">${n}</option>`).join('');
+  const ys = []; for (let y = now.getFullYear() - 1; y <= now.getFullYear() + 3; y++) ys.push(y);
+  $('yearSel').innerHTML = ys.map(y => `<option>${y}</option>`).join('');
+  $('themeSel').innerHTML = Object.keys(THEMES).map(k => `<option value="${k}">${THEMES[k][lang === 'hi' ? 1 : 0]}</option>`).join('');
+  $('treatSel').innerHTML = WD[lang].map((w, i) => `<option value="${i}">${w}</option>`).join('') + `<option value="-1">${tr('noTreat')}</option>`;
+  $('schoolSel').innerHTML = `<option value="mf">${tr('monFri')}</option><option value="ms">${tr('monSat')}</option>`;
+  $('colorSel').innerHTML = `<option value="none">${tr('nothing')}</option>` + KEYS.map(k => `<option value="${k}">${NUT[k].i} ${nl(k)}</option>`).join('');
+
+  $('langSeg').querySelectorAll('button').forEach(b => b.classList.toggle('on', b.dataset.v === lang));
+  $('dietSeg').querySelectorAll('button').forEach(b => b.classList.toggle('on', b.dataset.v === S.diet));
   $('monthSel').value = M; $('yearSel').value = Y;
-  $('calTitle').textContent = `${MONTHS[M]} ${Y}`;
+  $('themeSel').value = S.theme; $('treatSel').value = S.treat; $('schoolSel').value = S.school; $('colorSel').value = S.colorBy;
+
+  const season = seasonOf(M);
+  $('extras').innerHTML = Object.keys(EXTRAS).map(k => {
+    const x = EXTRAS[k];
+    const d = mk((S.diet === 'vegan' && x.vegan) ? x.vegan : x.veg);
+    if (S.diet === 'vegan' && !d.v) return '';
+    const label = k === 'fruit' ? L(SEASONS[season].fruitName) : nm(d);
+    return `<label class="chk ${S.extras[k] ? 'on' : ''}"><input type="checkbox" data-k="${k}" ${S.extras[k] ? 'checked' : ''}>${d.e} ${label}</label>`;
+  }).join('');
+  $('extras').querySelectorAll('input').forEach(i => i.onchange = () => { S.extras[i.dataset.k] = i.checked; saveSettings(); render(); });
+
+  $('legend').innerHTML = `
+    <span><i class="dot" style="background:var(--green)"></i>${tr('healthyDay')}</span>
+    ${S.treat >= 0 ? `<span><i class="dot" style="background:var(--treat)"></i>${tr('treatLegend', { d: WD[lang][S.treat] })}</span>` : ''}
+    <span><i class="dot" style="background:var(--tiffin)"></i>${tr('tiffinLegend', { r: tr(S.school === 'ms' ? 'monSat' : 'monFri') })}</span>
+    ${S.diet === 'vegan' ? `<span><i class="dot" style="background:var(--vegan)"></i>${tr('veganLegend')}</span>` : ''}`;
+  $('weekdays').innerHTML = WD_SHORT[lang].map((w, i) => `<div class="${i === S.treat ? 'treatcol' : ''}">${w}</div>`).join('');
+}
+
+function renderSeason() {
+  const s = SEASONS[seasonOf(M)];
+  const list = str => str.split(',').map(x => `<span>${x.split('|')[S.lang === 'hi' ? 1 : 0]}</span>`).join('');
+  $('season').innerHTML = `
+    <div class="big">${s.icon}</div>
+    <h2>${L(s)}</h2>
+    <div class="wx">🌡️ ${L(s.wx)} · ${tr('seasonNote')}</div>
+    <div class="season-body">
+      <div><div class="lbl2">${tr('seasonVeg')}</div><div class="chips">${list(s.veg)}</div></div>
+      <div><div class="lbl2">${tr('seasonFruit')}</div><div class="chips">${list(s.fruit)}</div></div>
+      <div><div class="lbl2">${tr('seasonTip')}</div><div class="tipbox">${L(s.tip)}</div></div>
+    </div>`;
+}
+
+/* ---------- main render ---------- */
+function render() {
+  renderChrome();
+  renderSeason();
+  const lang = S.lang;
+  $('calTitle').textContent = `${MONTHS[lang][M]} ${Y}`;
   plan = buildMonth(Y, M);
   if (sel > plan.length) sel = plan.length;
+
+  const cb = S.colorBy;
+  $('heatLegend').innerHTML = cb === 'none' ? '' :
+    `<span>${NUT[cb].i} ${tr('heatLbl', { n: nl(cb) })}</span><span style="color:var(--green)">${tr('heatGood')}</span><span style="color:var(--amber)">${tr('heatMid')}</span><span style="color:var(--red)">${tr('heatLow')}</span>`;
 
   const first = new Date(Y, M, 1).getDay();
   const isNowMonth = Y === now.getFullYear() && M === now.getMonth();
   let html = '';
   for (let i = 0; i < first; i++) html += '<div class="day empty"></div>';
   plan.forEach((p, i) => {
-    const t = sum(p.meals);
+    const t = totals(p);
+    const heat = cb !== 'none' ? 'h-' + level(pct(t, cb)) : '';
     const lines = p.meals.filter(m => m.slot !== 'sweet').map(m =>
-      `<div class="meal-line ${m.list === 'tiffin' ? 'tf' : ''}">${m.dish[1]} ${m.edited ? '<span class="edited">✎</span> ' : ''}${m.dish[0]}</div>`).join('');
-    html += `<button class="day ${p.sunday ? 'sunday' : ''} ${p.d === sel ? 'selected' : ''} ${isNowMonth && p.d === now.getDate() ? 'today' : ''}"
-      data-d="${p.d}" style="animation-delay:${i * 12}ms" aria-label="${WD[p.wd]} ${p.d} ${MONTHS[M]}">
-      <div class="day-head"><span><span class="num">${p.d}</span><span class="wdname">${WD[p.wd]}</span></span>
-        <span class="tag ${p.sunday ? 't' : 'h'}">${p.sunday ? '🎉 Treat' : '✅ Healthy'}</span></div>
+      `<div class="meal-line ${m.list === 'tiffin' ? 'tf' : ''}">${m.dish.e} ${m.edited ? '<span class="edited">✎</span> ' : ''}${nm(m.dish)}</div>`).join('');
+    html += `<button class="day ${p.treat ? 'treat' : ''} ${heat} ${p.d === sel ? 'selected' : ''} ${isNowMonth && p.d === now.getDate() ? 'today' : ''} ${cooked[p.key] ? 'cooked' : ''}"
+      data-d="${p.d}" style="animation-delay:${i * 10}ms" aria-label="${WD[lang][p.wd]} ${p.d} ${MONTHS[lang][M]}">
+      <div class="day-head"><span><span class="num">${p.d}</span><span class="wdname">${WD[lang][p.wd]}</span></span>
+        <span class="tag ${p.treat ? 't' : 'h'}">${tr(p.treat ? 'tagTreat' : 'tagHealthy')}</span></div>
       ${lines}
-      <div class="kcal">≈ ${t.kcal} kcal · ${t.p}g protein</div>
+      ${cb !== 'none' ? `<div class="heat">${NUT[cb].i} ${tr('ofGoal', { n: Math.round(pct(t, cb) * 100) })}</div>` : ''}
+      <div class="kcal">${tr('kcalLine', { k: Math.round(t.kcal), p: Math.round(t.p) })}</div>
     </button>`;
   });
   $('grid').innerHTML = html;
-  $('grid').querySelectorAll('.day[data-d]').forEach(b => b.onclick = () => { sel = +b.dataset.d; render(); });
+  $('grid').querySelectorAll('.day[data-d]').forEach(b => b.onclick = () => {
+    sel = +b.dataset.d; render();
+    if (window.innerWidth < 1360) $('panel').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
 
   renderSummary();
+  renderReport();
   renderPanel();
 }
 
 function renderSummary() {
-  const healthy = plan.filter(p => !p.sunday);
-  const avg = k => Math.round(healthy.reduce((s, p) => s + sum(p.meals)[k], 0) / healthy.length);
-  const tiffins = plan.filter(p => p.wd >= 1 && p.wd <= 5).length;
+  const healthy = plan.filter(p => !p.treat);
+  const tiffins = plan.filter(p => isSchool(p.wd)).length;
+  const done = plan.filter(p => cooked[p.key]).length;
   $('summary').innerHTML = `
-    <span class="pill">✅ ${healthy.length} healthy days</span>
-    <span class="pill">🎉 ${plan.length - healthy.length} Sundays</span>
-    <span class="pill">🎒 ${tiffins} tiffins</span>
-    <span class="pill">Avg healthy day ≈ ${avg('kcal')} kcal · ${avg('p')}g protein</span>`;
+    <span class="pill">${tr('sHealthy', { n: healthy.length })}</span>
+    <span class="pill">${tr('sTreat', { n: plan.length - healthy.length })}</span>
+    <span class="pill">${tr('sTiffin', { n: tiffins })}</span>
+    <span class="pill">${tr('sCooked', { a: done, b: plan.length })}</span>`;
+}
+
+function renderReport() {
+  const healthy = plan.filter(p => !p.treat);
+  const base = healthy.length ? healthy : plan;
+  const avg = {}; KEYS.forEach(k => avg[k] = base.reduce((s, p) => s + totals(p)[k], 0) / base.length);
+  const done = plan.filter(p => cooked[p.key]).length;
+  const weak = BOOST.filter(k => avg[k] / NUT[k].t < 0.9).sort((a, b) => avg[a] / NUT[a].t - avg[b] / NUT[b].t);
+  $('report').innerHTML = `
+    <h2>${tr('reportTitle', { m: MONTHS[S.lang][M] })}</h2>
+    <div class="sub">${tr('reportSub', { n: base.length })}${S.diet === 'vegan' ? tr('subVegan') : ''}</div>
+    <div class="tiles">${KEYS.map(k => {
+      const r = avg[k] / NUT[k].t;
+      return `<div class="tile ${level(r)}"><div class="t1">${NUT[k].i} ${nl(k)}</div>
+        <div class="t2">${Math.round(r * 100)}%</div>
+        <div class="t3">${tr('perDay', { v: fmt(avg[k], k), t: NUT[k].t, u: unit(k) })}</div></div>`;
+    }).join('')}</div>
+    <div class="section-title">${tr('progress', { a: done, b: plan.length })}</div>
+    <div class="progress"><i style="width:${Math.round(done / plan.length * 100)}%"></i></div>
+    <div class="tips">${weak.length
+      ? weak.slice(0, 3).map(k => `<div class="tip"><b>${NUT[k].i} ${tr('lowOn', { n: nl(k) })}</b> ${FOOD_TIPS[S.lang][k]}</div>`).join('')
+      : `<div class="tip">${tr('greatMonth')}</div>`}
+      ${S.diet === 'vegan' && !S.extras.milk ? `<div class="tip"><b>${tr('veganTip')}</b> ${FOOD_TIPS[S.lang].b12}</div>` : ''}
+    </div>`;
 }
 
 function renderPanel() {
   const p = plan[sel - 1];
-  const t = sum(p.meals);
+  const t = totals(p);
+  const season = seasonOf(M);
+  const extras = activeExtras(season);
+  const lang = S.lang;
+
   const meals = p.meals.map(m => {
     const x = m.dish;
-    const opts = D[m.list].map((o, i) => `<option value="${i}" ${i === m.idx ? 'selected' : ''}>${o[1]} ${o[0]}</option>`).join('');
-    const cls = m.list === 'tiffin' ? 'tiffin' : (p.sunday ? 'treat' : '');
+    const all = dietPool(m.list);
+    const opt = o => `<option value="${o.en}" ${o.en === x.en ? 'selected' : ''}>${o.e} ${nm(o)}${o.v && S.diet !== 'vegan' ? ' 🌱' : ''}</option>`;
+    const fresh = all.filter(o => inSeason(o, season)), other = all.filter(o => !inSeason(o, season));
+    const opts = `<optgroup label="${tr('inSeason')}">${fresh.map(opt).join('')}</optgroup>` +
+                 (other.length ? `<optgroup label="${tr('otherDishes')}">${other.map(opt).join('')}</optgroup>` : '');
+    const cls = m.list === 'tiffin' ? 'tiffin' : (p.treat ? 'treat' : '');
     return `<div class="meal ${cls}">
-      <div class="meal-top"><span class="slot">${m.label}</span>${m.edited ? '<span class="tag h">✎ your pick</span>' : ''}</div>
-      <div class="dish"><span class="emo">${x[1]}</span>
-        <div><div class="name">${x[0]}</div><div class="boost">${p.sunday ? '😋 ' + x[7] : '💪 Rich in ' + x[7]}</div></div></div>
+      <div class="meal-top"><span class="slot">${tr(m.label)}</span>${m.edited ? `<span class="tag h">${tr('yourPick')}</span>` : ''}</div>
+      <div class="dish"><span class="emo">${x.e}</span>
+        <div><div class="name">${nm(x)}</div>
+          <div class="badges">${x.v ? `<span class="tag v">${tr('tVegan')}</span>` : `<span class="tag h">${tr('tVeg')}</span>`}
+          ${x.s !== '*' && inSeason(x, season) ? `<span class="tag s">${tr('tSeason')}</span>` : ''}
+          ${p.treat ? `<span class="tag t">${tr('tTreat')}</span>` : ''}</div></div></div>
       <div class="nutri">
-        <span>🔥 ${x[2]} kcal</span><span>🥜 ${x[3]}g protein</span><span>🌾 ${x[4]}g carbs</span><span>🧈 ${x[5]}g fat</span><span>🥦 ${x[6]}g fibre</span>
+        <span>🔥 ${x.kcal} ${unit('kcal')}</span><span>💪 ${x.p}g ${nl('p')}</span><span>🥦 ${x.fb}g ${nl('fb')}</span>
+        <span>🩸 ${x.fe}mg ${nl('fe')}</span><span>🦴 ${x.ca}mg ${nl('ca')}</span><span>🍊 ${x.vc}mg ${nl('vc')}</span>
+        <span>🥕 ${x.va}µg ${nl('va')}</span><span>⚡ ${x.zn}mg ${nl('zn')}</span>${x.b12 ? `<span>🧬 ${x.b12}µg B12</span>` : ''}
       </div>
-      <select data-slot="${m.slot}" data-list="${m.list}" aria-label="Change ${m.label}">${opts}</select>
+      <div class="meal-actions">
+        <select data-slot="${m.slot}" aria-label="${tr(m.label)}">${opts}</select>
+        <button class="btn sm" data-swap="${m.slot}" data-list="${m.list}">${tr('swap')}</button>
+      </div>
     </div>`;
   }).join('');
 
-  const bar = (label, val, tgt, unit) => {
-    const pct = Math.min(100, Math.round(val / tgt * 100));
-    return `<div class="bar-row"><span>${label}</span><div class="bar"><i class="${val > tgt * 1.1 ? 'over' : ''}" data-w="${pct}"></i></div><span>${val}${unit} / ${tgt}${unit}</span></div>`;
-  };
+  /* Suggestions: in-season dishes that raise the weakest nutrient a swap can actually improve
+     (e.g. vegan B12 can't be fixed by a dish, so we move on to the next weakest one) */
+  const lowFirst = BOOST.slice().sort((a, b) => pct(t, a) - pct(t, b));
+  const weakest = lowFirst[0];
+  let sugg = [], boostKey = null;
+  for (const k of lowFirst.filter(k => pct(t, k) < 0.9)) {
+    const found = [];
+    p.meals.filter(m => m.slot !== 'sweet').forEach(m => {
+      seasonPool(m.list, season).filter(o => o.en !== m.dish.en && o[k] > m.dish[k])
+        .forEach(o => found.push({ slot: m.slot, label: m.label, o, gain: o[k] - m.dish[k] }));
+    });
+    if (found.length) {
+      found.sort((a, b) => b.gain - a.gain);
+      const seen = new Set();
+      sugg = found.filter(s => !seen.has(s.slot + s.o.en) && seen.add(s.slot + s.o.en)).slice(0, 4);
+      boostKey = k;
+      break;
+    }
+  }
+
+  const bars = KEYS.map(k => {
+    const r = pct(t, k);
+    const over = (k === 'kcal' || k === 'f') && r > 1.15;
+    return `<div class="bar-row"><span>${NUT[k].i} ${nl(k)}</span>
+      <div class="bar"><i class="${over ? 'over' : level(r)}" data-w="${Math.min(100, Math.round(r * 100))}"></i></div>
+      <span class="val">${fmt(t[k], k)}/${NUT[k].t} ${unit(k)}</span></div>`;
+  }).join('');
 
   $('panel').innerHTML = `
-    <h2>${WD[p.wd]}, ${p.d} ${MONTHS[M]}</h2>
-    <div class="sub">${p.sunday ? 'Sunday Funday 🎉' : (p.wd === 6 ? 'Saturday — lunch at home' : 'School day 🎒')}</div>
-    <div class="banner ${p.sunday ? 't' : 'h'}">${p.sunday
-      ? '🎉 Treat day! Enjoy the yummy stuff — keep portions small and drink plenty of water.'
-      : '✅ Healthy day: dal / paneer / sprouts for protein, veggies for vitamins and fibre.'}</div>
-    ${meals}
+    <div class="panel-head">
+      <div><h2>${WD[lang][p.wd]}, ${p.d} ${MONTHS[lang][M]}</h2>
+      <div class="sub">${tr(p.treat ? 'subTreat' : isSchool(p.wd) ? 'subSchool' : 'subHome')}${S.diet === 'vegan' ? tr('subVegan') : ''}</div></div>
+      <button class="btn sm" id="cookBtn">${tr(cooked[p.key] ? 'cooked' : 'markCooked')}</button>
+    </div>
+    <div class="banner ${p.treat ? 't' : 'h'}">${p.treat ? tr('bannerTreat') : tr('bannerHealthy', { pr: tr(S.diet === 'vegan' ? 'prVegan' : 'prVeg') })}</div>
+    <div class="meals">${meals}</div>
+
+    ${sugg.length ? `<div class="section-title">${tr('boost', { n: NUT[boostKey].i + ' ' + nl(boostKey) })}</div>
+      <div class="suggest">${sugg.map((s, i) => `<button class="sg" data-i="${i}">${s.o.e} ${nm(s.o)}<small>${tr(s.label).replace('🎒 ', '')}: +${fmt(s.gain, boostKey)} ${unit(boostKey)}</small></button>`).join('')}</div>` : ''}
+
+    <div class="section-title">${tr('extrasIncl')}</div>
+    <div class="suggest">${extras.length ? extras.map(x => `<span class="pill">${x.e} ${nm(x)}</span>`).join('') : `<span class="note">${tr('extrasNone')}</span>`}</div>
+
     <div class="totals">
-      <h3>Day total (3 meals${p.sunday ? ' + sweet' : ''})</h3>
-      ${bar('Energy', t.kcal, TARGET.kcal, '')}
-      ${bar('Protein', t.p, TARGET.p, 'g')}
-      ${bar('Carbs', t.c, TARGET.c, 'g')}
-      ${bar('Fat', t.f, TARGET.f, 'g')}
-      ${bar('Fibre', t.fb, TARGET.fb, 'g')}
-      <div class="note">Goal shown is a rough daily guide for a 7–10 year old. Add milk, fruit and a snack to reach it.</div>
+      <div class="section-title" style="margin-top:0">${tr('dayTotal')}</div>
+      ${bars}
+      <div class="note">${pct(t, weakest) < 0.9 ? `<b>${tr('tip')}</b> ${FOOD_TIPS[lang][weakest]}` : tr('dayGreat')}</div>
     </div>`;
 
   requestAnimationFrame(() => $('panel').querySelectorAll('.bar i').forEach(i => i.style.width = i.dataset.w + '%'));
-  $('panel').querySelectorAll('select').forEach(s => s.onchange = () => {
-    const k = p.key;
-    edits[k] = edits[k] || {};
-    edits[k][s.dataset.slot] = +s.value;
-    store.set('kp-edits', edits);
-    toast('Saved ✔');
-    render();
+
+  const setDish = (slot, name) => {
+    edits[p.key] = edits[p.key] || {};
+    edits[p.key][slot] = name;
+    store.set('kp2-edits', edits);
+  };
+  $('panel').querySelectorAll('select[data-slot]').forEach(s => s.onchange = () => { setDish(s.dataset.slot, s.value); toast(tr('saved')); render(); });
+  $('panel').querySelectorAll('[data-swap]').forEach(b => b.onclick = () => {
+    const cur = p.meals.find(m => m.slot === b.dataset.swap).dish.en;
+    const choices = seasonPool(b.dataset.list, season).filter(o => o.en !== cur);
+    if (!choices.length) return;
+    const o = choices[Math.floor(Math.random() * choices.length)];
+    setDish(b.dataset.swap, o.en); toast(tr('swapped', { d: o.e + ' ' + nm(o) })); render();
   });
+  $('panel').querySelectorAll('.sg[data-i]').forEach(b => b.onclick = () => {
+    const s = sugg[+b.dataset.i];
+    setDish(s.slot, s.o.en); toast(tr('added', { d: s.o.e + ' ' + nm(s.o) })); render();
+  });
+  $('cookBtn').onclick = () => {
+    if (cooked[p.key]) delete cooked[p.key]; else cooked[p.key] = true;
+    store.set('kp2-cooked', cooked);
+    toast(tr(cooked[p.key] ? 'cookedT' : 'unmarked'));
+    render();
+  };
 }
 
 let toastTimer;
 function toast(msg) {
   const t = $('toast'); t.textContent = msg; t.classList.add('show');
-  clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove('show'), 1600);
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove('show'), 1800);
 }
 
 function go(dm) {
@@ -535,7 +1078,7 @@ function go(dm) {
 }
 
 /* ---------- controls ---------- */
-setupSelects();
+setupOptions();
 $('prev').onclick = () => go(-1);
 $('next').onclick = () => go(1);
 $('monthSel').onchange = e => { M = +e.target.value; sel = 1; render(); };
@@ -544,20 +1087,20 @@ $('todayBtn').onclick = () => { Y = now.getFullYear(); M = now.getMonth(); sel =
 $('shuffle').onclick = () => {
   const k = `${Y}-${pad(M + 1)}`;
   seeds[k] = Math.floor(Math.random() * 1e6);
-  store.set('kp-seeds', seeds);
-  toast(`New plan for ${MONTHS[M]} 🔀`);
+  store.set('kp2-seeds', seeds);
+  toast(tr('newPlanT', { m: MONTHS[S.lang][M] }));
   render();
 };
 $('reset').onclick = () => {
   const prefix = `${Y}-${pad(M + 1)}-`;
   Object.keys(edits).forEach(k => { if (k.startsWith(prefix)) delete edits[k]; });
-  store.set('kp-edits', edits);
-  toast('Your edits for this month were cleared');
+  store.set('kp2-edits', edits);
+  toast(tr('resetT'));
   render();
 };
 $('print').onclick = () => window.print();
 document.addEventListener('keydown', e => {
-  if (e.target.tagName === 'SELECT') return;
+  if (['SELECT', 'INPUT'].includes(e.target.tagName)) return;
   if (e.key === 'ArrowLeft') go(-1);
   if (e.key === 'ArrowRight') go(1);
 });
